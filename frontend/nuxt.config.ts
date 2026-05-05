@@ -13,6 +13,14 @@ export default defineNuxtConfig({
     },
   },
 
+  nitro: {
+    routeRules: {
+      '/api/**': {
+        proxy: 'http://localhost:5003/**'
+      }
+    }
+  },
+
   css: ['~/assets/css/main.css'],
 
   modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxt/fonts'],

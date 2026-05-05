@@ -5,7 +5,7 @@
       <header class="w-full h-14 shrink-0 border-b border-slate-200  backdrop-blur-md px-4 flex items-center justify-between z-10">
         <div class="flex items-center gap-5.5">
           <SidebarTrigger class="text-indigo-900 group-hover:text-indigo-500 transition-colors" />
-          <div class="h-6 w-[1px] bg-slate-200" />
+          <div class="h-6 w-px bg-slate-200" />
           <span class="font-black text-blue-900 tracking-tight text-xl">DASHBY</span>
         </div>
 
