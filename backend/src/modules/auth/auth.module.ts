@@ -12,9 +12,9 @@ import { GoogleStrategy } from './strategies/google.strategy';
     UserModule,
     GoogleRecaptchaModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory:getRecaptchaConfig,
+      useFactory: getRecaptchaConfig,
       inject: [ConfigService],
-    })
+    }),
   ],
   controllers: [AuthController],
   providers: [AuthService, GoogleStrategy],

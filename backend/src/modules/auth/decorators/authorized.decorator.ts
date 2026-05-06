@@ -7,4 +7,5 @@ export const Authorized = createParamDecorator(
     const user = request.user;
 
     return data ? user?.[data] : user;
-  })
+  },
+);

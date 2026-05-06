@@ -1,17 +1,22 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
-  Req, Res,
+  Req,
+  Res,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard as PassportAuthGuard } from '@nestjs/passport';
 import { RegisterDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import * as express from 'express';
 import { LoginDto } from './dto/login.dto';
 import { Roles } from './decorators/roles.decorator';
 import { Recaptcha } from '@nestlab/google-recaptcha';
+import { User } from '../../../generated/prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -31,6 +36,20 @@ export class AuthController {
     return this.authService.login(request, dto);
   }
 
+  @Get('google')
+  @UseGuards(PassportAuthGuard('google'))
+  async googleAuth() {}
+
+  @Get('google/callback')
+  @UseGuards(PassportAuthGuard('google'))
+  async googleCallback(
+    @Req() request: express.Request,
+    @Res() response: express.Response,
+  ) {
+    await this.authService.saveSession(request, request.user as User);
+    return response.redirect('http://localhost:3000');
+  }
+
   @Post('logout')
   @Roles('REGULAR')
   @HttpCode(HttpStatus.OK)
@@ -41,4 +60,3 @@ export class AuthController {
     return this.authService.logout(request, response);
   }
 }
-

@@ -10,14 +10,14 @@ export class UserController {
   @Auth()
   @HttpCode(HttpStatus.OK)
   @Get('profile')
-  async getProfile(@Authorized('id') userId: string  ) {
-    return this.userService.findById(userId)
+  async getProfile(@Authorized('id') userId: string) {
+    return this.userService.findById(userId);
   }
 
   @Auth('REGULAR')
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async getUser(@Param('id') id: string  ) {
+  async getUser(@Param('id') id: string) {
     return this.userService.findById(id);
   }
 }

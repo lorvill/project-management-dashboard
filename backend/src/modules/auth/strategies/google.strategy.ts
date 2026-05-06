@@ -1,6 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, Profile } from 'passport-google-oauth20';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '../auth.service';
 
@@ -18,14 +18,16 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     });
   }
 
-  async validate(
-    accessToken: string,
-    refreshToken: string,
-    profile: Profile,
-  ) {
+  async validate(accessToken: string, refreshToken: string, profile: Profile) {
+    const email = profile.emails?.[0]?.value;
+
+    if (!email) {
+      throw new UnauthorizedException('Google account email is required.');
+    }
+    console.log(profile);
     return this.authService.validateGoogleUser({
       googleId: profile.id,
-      email: profile.emails?.[0]?.value ?? '',
+      email,
       name: profile.displayName,
       picture: profile.photos?.[0]?.value ?? '',
     });

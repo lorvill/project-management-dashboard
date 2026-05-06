@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Eye, EyeOff, Github, Apple } from 'lucide-vue-next'
+import { Eye, EyeOff } from 'lucide-vue-next'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -18,6 +18,10 @@ const password = ref('')
 const confirmPassword = ref('')
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
+
+const registerWithGoogle = () => {
+  window.location.href = 'http://localhost:5003/auth/google'
+}
 </script>
 
 <template>
@@ -155,7 +159,7 @@ const showConfirmPassword = ref(false)
 
       <Button
           type="submit"
-          class="mt-1 h-10 w-full rounded-md bg-[#050816] text-sm font-medium text-white shadow-[0_14px_24px_rgba(5,8,22,0.24)] hover:bg-[#0b1022] sm:h-11"
+          class="mt-1 h-10 w-full rounded-md bg-[#050816] text-sm font-medium text-white shadow-[0_14px_24px_rgba(5,8,22,0.24)] hover:bg-[#0b1022] sm:h-11 cursor-pointer"
       >
         Create account
       </Button>
@@ -169,29 +173,14 @@ const showConfirmPassword = ref(false)
           <Separator class="h-px flex-1 bg-slate-200" />
         </div>
 
-        <div class="grid w-full grid-cols-3 gap-2 sm:gap-3">
+        <div class="w-full">
           <Button
+              @click="registerWithGoogle"
               type="button"
               variant="outline"
-              class="h-9 w-full rounded-none border-slate-200 bg-white text-slate-700 shadow-none hover:bg-slate-50 sm:h-10"
+              class="mt-1 h-10 w-full rounded-md bg-neutral-100 text-sm font-medium text-white shadow-[0_14px_24px_rgba(5,8,22,0.24)] hover:bg-neutral-200 sm:h-11 cursor-pointer"
           >
-            <span class="text-base font-semibold text-[#ea4335]">G</span>
-          </Button>
-
-          <Button
-              type="button"
-              variant="outline"
-              class="h-9 w-full rounded-none border-slate-200 bg-white text-slate-700 shadow-none hover:bg-slate-50 sm:h-10"
-          >
-            <Github class="size-4" />
-          </Button>
-
-          <Button
-              type="button"
-              variant="outline"
-              class="h-9 w-full rounded-none border-slate-200 bg-white text-slate-700 shadow-none hover:bg-slate-50 sm:h-10"
-          >
-            <Apple class="size-4" />
+            <span class="text-base font-semibold text-black">Google</span>
           </Button>
         </div>
 

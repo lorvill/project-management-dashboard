@@ -9,16 +9,17 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { UserService } from '../user/user.service';
 import { AuthMethod, User } from '../../../generated/prisma/client';
-import {Request, Response} from 'express';
+import { Request, Response } from 'express';
 import { verify } from 'argon2';
 import { ConfigService } from '@nestjs/config';
-
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly configService: ConfigService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   async register(req: Request, dto: RegisterDto): Promise<User> {
@@ -32,9 +33,8 @@ export class AuthService {
       '',
       AuthMethod.CREDENTIALS,
       false,
-    );
+    )
 
-    // @ts-ignore
     return this.saveSession(req, createNewUser);
   }
 
@@ -56,6 +56,26 @@ export class AuthService {
     name: string;
     picture: string;
   }): Promise<User> {
+    if (!profile.email) {
+      throw new UnauthorizedException('Google account email is required.');
+    }
+
+    const account = await this.prismaService.account.findUnique({
+      where: {
+        provider_providerAccountId: {
+          provider: 'google',
+          providerAccountId: profile.googleId,
+        },
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    if (account) {
+      return account.user;
+    }
+
     let user = await this.userService.findByEmail(profile.email);
 
     if (!user) {
@@ -68,6 +88,15 @@ export class AuthService {
         true,
       );
     }
+
+    await this.prismaService.account.create({
+      data: {
+        type: 'oauth',
+        provider: 'google',
+        providerAccountId: profile.googleId,
+        userId: user.id,
+      },
+    });
 
     return user;
   }

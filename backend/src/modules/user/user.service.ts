@@ -10,9 +10,10 @@ export class UserService {
     const user = await this.prismaService.user.findUnique({
       where: { id },
       include: { accounts: true },
-    })
-    if (!user) throw new NotFoundException(`User is not found. Check the data.`)
-    return user
+    });
+    if (!user)
+      throw new NotFoundException(`User is not found. Check the data.`);
+    return user;
   }
 
   async findByEmail(email: string) {
@@ -23,7 +24,14 @@ export class UserService {
     return user;
   }
 
-  async create(email: string, password: string, displayName: string, picture: string, method: AuthMethod, isVerified: boolean) {
+  async create(
+    email: string,
+    password: string,
+    displayName: string,
+    picture: string,
+    method: AuthMethod,
+    isVerified: boolean,
+  ) {
     const user = await this.prismaService.user.create({
       data: {
         email,
@@ -31,11 +39,11 @@ export class UserService {
         displayName,
         picture,
         method,
-        isVerified
+        isVerified,
       },
-      include: { accounts: true }
-    })
+      include: { accounts: true },
+    });
 
-    return user
+    return user;
   }
 }

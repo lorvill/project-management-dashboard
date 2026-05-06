@@ -6,10 +6,7 @@ import { Roles } from './roles.decorator';
 
 export function Auth(...roles: Role[]) {
   if (roles.length > 1) {
-   return applyDecorators(
-     Roles(...roles),
-     UseGuards(AuthGuard, RolesGuard)
-   )
+    return applyDecorators(Roles(...roles), UseGuards(AuthGuard, RolesGuard));
   }
-  return applyDecorators(UseGuards(AuthGuard))
+  return applyDecorators(UseGuards(AuthGuard));
 }
