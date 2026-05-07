@@ -23,7 +23,13 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
-  modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxt/fonts'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    'shadcn-nuxt',
+    '@nuxt/fonts',
+    '@pinia/colada-nuxt',
+    '@pinia/nuxt',
+  ],
 
   shadcn: {
     /**

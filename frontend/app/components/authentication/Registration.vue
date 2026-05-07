@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Eye, EyeOff } from 'lucide-vue-next'
-
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -11,9 +10,10 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
+import {useAuthMutations} from "~/queries/auth/auth.queries";
 
 const email = ref('')
-const fullName = ref('')
+const name = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const showPassword = ref(false)
@@ -21,6 +21,28 @@ const showConfirmPassword = ref(false)
 
 const registerWithGoogle = () => {
   window.location.href = 'http://localhost:5003/auth/google'
+}
+
+const { registerMutation } = useAuthMutations()
+
+const onSubmit = () => {
+  if (!email.value || !name.value || !password.value || !confirmPassword.value) {
+    return
+  }
+
+  if (password.value !== confirmPassword.value) {
+    return
+  }
+
+
+  registerMutation.mutate(
+      {
+        email: email.value,
+        name: name.value,
+        password: password.value,
+        confirmPassword: confirmPassword.value
+      },
+  )
 }
 </script>
 
@@ -41,6 +63,10 @@ const registerWithGoogle = () => {
         </div>
       </div>
 
+      <form
+          class="w-full space-y-3 sm:space-y-4"
+          @submit.prevent="onSubmit"
+      >
       <FieldGroup class="w-full space-y-1 sm:space-y-0.5">
         <Field>
           <FieldLabel
@@ -52,7 +78,7 @@ const registerWithGoogle = () => {
 
           <Input
               id="full-name"
-              v-model="fullName"
+              v-model="name"
               type="text"
               autocomplete="name"
               placeholder="Natala Brak"
@@ -163,6 +189,7 @@ const registerWithGoogle = () => {
       >
         Create account
       </Button>
+      </form>
 
       <div class="w-full space-y-3 sm:space-y-4">
         <div class="flex w-full items-center gap-2.5 sm:gap-3">

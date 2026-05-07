@@ -33,8 +33,9 @@ export class AuthService {
       '',
       AuthMethod.CREDENTIALS,
       false,
-    )
+    );
 
+    // @ts-ignore
     return this.saveSession(req, createNewUser);
   }
 

@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
+import {useAuthMutations} from "~/queries/auth/auth.queries";
 
 const email = ref('')
 const password = ref('')
@@ -17,6 +18,21 @@ const showPassword = ref(false)
 
 const loginWithGoogle = () => {
   window.location.href = 'http://localhost:5003/auth/google'
+}
+
+const { loginMutation } = useAuthMutations()
+
+const onSubmit = () => {
+  if (!email.value || !password.value) {
+    return
+  }
+
+  loginMutation.mutate(
+      {
+        email: email.value,
+        password: password.value,
+      },
+  )
 }
 </script>
 
@@ -40,6 +56,10 @@ const loginWithGoogle = () => {
         </div>
       </div>
 
+      <form
+          class="w-full space-y-3 sm:space-y-4"
+          @submit.prevent="onSubmit"
+      >
         <FieldGroup class="space-y-5">
           <Field>
             <FieldLabel
@@ -57,10 +77,6 @@ const loginWithGoogle = () => {
                 placeholder="natala.brak@kmnsstudio.com"
                 class="h-11 w-full rounded-none border-slate-200 px-4 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2"
             />
-
-            <FieldDescription class="text-xs text-slate-400">
-              Enter the email linked to your account.
-            </FieldDescription>
           </Field>
 
           <Field>
@@ -107,10 +123,6 @@ const loginWithGoogle = () => {
                 />
               </Button>
             </div>
-
-            <FieldDescription class="text-xs text-slate-400">
-              Use the password you created during registration.
-            </FieldDescription>
           </Field>
         </FieldGroup>
 
@@ -120,6 +132,7 @@ const loginWithGoogle = () => {
         >
           Log in
         </Button>
+      </form>
 
       <div class="w-full space-y-5">
         <div class="flex w-full items-center gap-3 sm:gap-4">
