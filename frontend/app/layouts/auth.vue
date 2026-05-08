@@ -5,7 +5,7 @@ import authCover from '@/assets/images/bg-auth.jpg'
 <template>
   <div class="h-dvh w-full bg-linear-to-br from-gray-100 via-gray-400 to-[#cfdaec] p-4">
     <div
-        class="grid h-full w-full grid-cols-1 gap-4 overflow-hidden rounded-3xl bg-white/80 p-4.5 lg:grid-cols-[560px_minmax(0,1fr)]"
+        class="grid h-full w-full grid-cols-1 gap-4 overflow-hidden rounded-3xl bg-white/80 p-[18px] lg:grid-cols-[560px_minmax(0,1fr)]"
     >
       <section
           class="relative hidden h-full min-h-0 flex-col justify-between overflow-hidden rounded-3xl p-7 lg:flex"
@@ -22,7 +22,7 @@ import authCover from '@/assets/images/bg-auth.jpg'
         </span>
         </div>
 
-        <div class="max-w-auto mx-auto">
+        <div class="mx-auto max-w-xl">
           <p class="mb-5 ml-1 text-[23px] font-normal text-[#2b2b2b]">You can easily</p>
           <h1 class="text-5xl mb-8 font-normal text-black">
             get access your personal hub for clarity and productivity.

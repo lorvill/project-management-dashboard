@@ -1,7 +1,10 @@
-import {apiFetch} from "~/queries/api";
+import { apiFetch } from '~/queries/api'
 
 export const getUser = () => {
-    return apiFetch(`/user/profile`, {
-        method: 'POST',
+    return apiFetch('/user/profile', {
+        method: 'GET',
+        headers: import.meta.server
+            ? useRequestHeaders(['cookie'])
+            : undefined,
     })
 }

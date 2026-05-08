@@ -2,6 +2,7 @@
 definePageMeta({
   layout: 'auth',
   name: 'registration',
+  middleware: 'guest',
 })
 </script>
 

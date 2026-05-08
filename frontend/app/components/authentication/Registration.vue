@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import {useAuthMutations} from "~/queries/auth/auth.queries";
+import {useAuthMutations} from "~/queries/auth/auth.mutations";
 
 const email = ref('')
 const name = ref('')

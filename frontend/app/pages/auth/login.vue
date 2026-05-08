@@ -2,11 +2,12 @@
 definePageMeta({
   layout: 'auth',
   name: 'login',
+  middleware: 'guest',
 })
 </script>
 
 <template>
   <div>
-    <AuthenticationLogin />
+    <AuthenticationLogin/>
   </div>
 </template>
