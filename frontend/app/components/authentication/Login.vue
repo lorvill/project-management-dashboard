@@ -10,10 +10,12 @@ import {
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import {useAuthMutations} from "~/queries/auth/auth.mutations";
+import { useForm } from 'vee-validate'
+import { loginSchema } from "~/queries/auth/auth.schema";
+import {toTypedSchema} from "@vee-validate/zod";
 
-const email = ref('')
-const password = ref('')
 const showPassword = ref(false)
+const authError = ref('')
 
 const loginWithGoogle = () => {
   window.location.href = 'http://localhost:5003/auth/google'
@@ -21,18 +23,25 @@ const loginWithGoogle = () => {
 
 const { loginMutation } = useAuthMutations()
 
-const onSubmit = () => {
-  if (!email.value || !password.value) {
-    return
-  }
+const {
+  defineField,
+  errors,
+  handleSubmit,
+} = useForm({
+  validationSchema: toTypedSchema(loginSchema),
+})
 
-  loginMutation.mutate(
-      {
-        email: email.value,
-        password: password.value,
-      },
-  )
-}
+const [email, emailProps] = defineField('email')
+const [password, passwordProps] = defineField('password')
+
+const onSubmit = handleSubmit(async(values) => {
+  authError.value = ''
+  try {
+    await loginMutation.mutateAsync(values)
+  } catch {
+    authError.value = 'Incorrect email or password'
+  }
+})
 </script>
 
 <template>
@@ -71,11 +80,18 @@ const onSubmit = () => {
             <Input
                 id="email"
                 v-model="email"
+                v-bind="emailProps"
                 type="email"
                 autocomplete="email"
                 placeholder="natala.brak@kmnsstudio.com"
-                class="h-11 w-full rounded-none border-slate-200 px-4 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2"
+                :class="[
+                    'h-11 w-full rounded-none px-4 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2',
+                     errors.email ? 'border-red-500' : 'border-slate-200']"
             />
+
+            <p v-if="errors.email" class="mt-1 text-sm text-red-500">
+              {{ errors.email }}
+            </p>
           </Field>
 
           <Field>
@@ -99,11 +115,19 @@ const onSubmit = () => {
               <Input
                   id="password"
                   v-model="password"
+                  v-bind="passwordProps"
                   :type="showPassword ? 'text' : 'password'"
                   autocomplete="current-password"
                   placeholder="Enter your password"
-                  class="h-11 w-full rounded-none border-slate-200 px-4 pr-11 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2"
+                  :class="[
+                      'h-11 w-full rounded-none px-4 pr-11 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2',
+                      errors.password ? 'border-red-500' : 'border-slate-200'
+  ]"
               />
+
+              <p v-if="errors.password" class="mt-1 text-sm text-red-500">
+                {{ errors.password }}
+              </p>
 
               <Button
                   type="button"
@@ -125,6 +149,13 @@ const onSubmit = () => {
           </Field>
         </FieldGroup>
 
+        <p
+            v-if="authError"
+            class="text-sm text-red-500"
+        >
+          {{ authError }}
+        </p>
+        
         <Button
             type="submit"
             class="h-12 w-full rounded-md bg-[#050816] text-sm font-medium text-white shadow-[0_18px_30px_rgba(5,8,22,0.28)] hover:bg-[#0b1022]"

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Eye, EyeOff } from 'lucide-vue-next'
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -10,14 +12,26 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import {useAuthMutations} from "~/queries/auth/auth.mutations";
 
-const email = ref('')
-const name = ref('')
-const password = ref('')
-const confirmPassword = ref('')
+import { useAuthMutations } from '~/queries/auth/auth.mutations'
+import { registerSchema } from '~/queries/auth/auth.schema'
+
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
+const authError = ref('')
+
+const {
+  defineField,
+  errors,
+  handleSubmit,
+} = useForm({
+  validationSchema: toTypedSchema(registerSchema),
+})
+
+const [name, nameProps] = defineField('name')
+const [email, emailProps] = defineField('email')
+const [password, passwordProps] = defineField('password')
+const [confirmPassword, confirmPasswordProps] = defineField('confirmPassword')
 
 const registerWithGoogle = () => {
   window.location.href = 'http://localhost:5003/auth/google'
@@ -25,25 +39,54 @@ const registerWithGoogle = () => {
 
 const { registerMutation } = useAuthMutations()
 
-const onSubmit = () => {
-  if (!email.value || !name.value || !password.value || !confirmPassword.value) {
+watch(() => ({
+  email: email.value,
+  name: name.value,
+}),
+    (values) => {
+  localStorage.setItem('register-draft',
+  JSON.stringify({
+    ...values,
+    savedAt: Date.now()
+  }))
+}, { deep: true })
+
+
+onMounted(() => {
+  const draft = localStorage.getItem('register-draft')
+  if (!draft) return
+
+  let parsed: { email?: string, name?: string, savedAt?: number }
+
+  try {
+    parsed = JSON.parse(draft)
+  } catch {
+    localStorage.removeItem('register-draft')
     return
   }
 
-  if (password.value !== confirmPassword.value) {
+  const expired = !parsed.savedAt || Date.now() - parsed.savedAt > 1000 * 60 * 3
+  if (expired) {
+    localStorage.removeItem('register-draft')
     return
   }
 
+  email.value = parsed.email ?? ''
+  name.value = parsed.name ?? ''
+})
 
-  registerMutation.mutate(
-      {
-        email: email.value,
-        name: name.value,
-        password: password.value,
-        confirmPassword: confirmPassword.value
-      },
-  )
-}
+const onSubmit = handleSubmit(async (values) => {
+  authError.value = ''
+
+  try {
+    await registerMutation.mutateAsync(values)
+    localStorage.removeItem('register-draft')
+  } catch (error: any) {
+    authError.value =
+        error?.data?.message ??
+        'Registration failed. User with this email already exists.'
+  }
+})
 </script>
 
 <template>
@@ -79,11 +122,19 @@ const onSubmit = () => {
           <Input
               id="full-name"
               v-model="name"
+              v-bind="nameProps"
               type="text"
               autocomplete="name"
               placeholder="Natala Brak"
-              class="h-9 w-full rounded-none border-slate-200 px-3 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2 sm:h-10 sm:px-4"
+              :class="[
+                  'h-9 w-full rounded-none px-3 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2 sm:h-10 sm:px-4',
+                  errors.name ? 'border-red-500' : 'border-slate-200'
+              ]"
           />
+
+          <p v-if="errors.name" class="text-xs text-red-500">
+            {{ errors.name }}
+          </p>
         </Field>
 
         <Field>
@@ -97,11 +148,19 @@ const onSubmit = () => {
           <Input
               id="email"
               v-model="email"
+              v-bind="emailProps"
               type="email"
               autocomplete="email"
               placeholder="natala.brak@kmnsstudio.com"
-              class="h-9 w-full rounded-none border-slate-200 px-3 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2 sm:h-10 sm:px-4"
+              :class="[
+                  'h-9 w-full rounded-none px-3 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2 sm:h-10 sm:px-4',
+                  errors.email ? 'border-red-500' : 'border-slate-200',
+                ]"
           />
+
+          <p v-if="errors.email" class="text-xs text-red-500">
+            {{ errors.email }}
+          </p>
         </Field>
 
         <Field>
@@ -116,11 +175,18 @@ const onSubmit = () => {
             <Input
                 id="password"
                 v-model="password"
+                v-bind="passwordProps"
                 :type="showPassword ? 'text' : 'password'"
                 autocomplete="new-password"
                 placeholder="Create a strong password"
-                class="h-9 w-full rounded-none border-slate-200 px-3 pr-10 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2 sm:h-10 sm:px-4 sm:pr-11"
+                :class="[
+                    'h-9 w-full rounded-none px-3 pr-10 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2 sm:h-10 sm:px-4 sm:pr-11',
+                    errors.password ? 'border-red-500' : 'border-slate-200']"
             />
+
+            <p v-if="errors.password" class="text-xs text-red-500">
+              {{ errors.password }}
+            </p>
 
             <Button
                 type="button"
@@ -157,11 +223,19 @@ const onSubmit = () => {
             <Input
                 id="confirm-password"
                 v-model="confirmPassword"
+                v-bind="confirmPasswordProps"
                 :type="showConfirmPassword ? 'text' : 'password'"
                 autocomplete="new-password"
                 placeholder="Repeat your password"
-                class="h-9 w-full rounded-none border-slate-200 px-3 pr-10 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2 sm:h-10 sm:px-4 sm:pr-11"
+                :class="[
+                    'h-9 w-full rounded-none px-3 pr-10 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2 sm:h-10 sm:px-4 sm:pr-11',
+                    errors.confirmPassword ? 'border-red-500' : 'border-slate-200'
+                  ]"
             />
+
+            <p v-if="errors.confirmPassword" class="text-xs text-red-500">
+              {{ errors.confirmPassword }}
+            </p>
 
             <Button
                 type="button"
@@ -182,6 +256,10 @@ const onSubmit = () => {
           </div>
         </Field>
       </FieldGroup>
+
+            <p v-if="authError" class="text-sm text-red-500">
+              {{ authError }}
+            </p>
 
       <Button
           type="submit"
