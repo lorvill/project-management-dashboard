@@ -8,9 +8,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {LogOut, Settings, User} from "lucide-vue-next";
-
-
+import {useAuthMutations} from "~/queries/auth/auth.mutations";
 const userColor = ref('#4F46E5');
+
+const { logoutMutation } = useAuthMutations()
+
+function logout() {
+  logoutMutation.mutate()
+}
 </script>
 
 <template>
@@ -51,7 +56,7 @@ const userColor = ref('#4F46E5');
           class="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 outline-none transition-all duration-200 rounded-lg cursor-pointer hover:bg-red-50 hover:text-red-600 group"
       >
         <component :is="LogOut" class="w-4 h-4 text-slate-400 group-hover:text-red-500 transition-colors" />
-        <span class="font-medium">Log Out</span>
+        <span @click="logoutMutation.mutate()" class="font-medium">Log Out</span>
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>

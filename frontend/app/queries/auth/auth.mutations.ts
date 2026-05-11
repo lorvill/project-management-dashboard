@@ -35,10 +35,8 @@ export const useAuthMutations = defineMutation(() => {
     const logoutMutation = useMutation({
         mutation: logoutUser,
         async onSuccess() {
-            queryCache.cancelQueries()
-            queryCache.getEntries().forEach((entry) => {
-                queryCache.remove(entry)
-            })
+            queryCache.setQueryData(AUTH_QUERY_KEYS.currentUser(), null)
+
             await navigateTo({ name: 'login' })
         },
     })

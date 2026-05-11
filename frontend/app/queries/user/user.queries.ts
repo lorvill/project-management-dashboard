@@ -6,6 +6,7 @@ export const useUserQuery = defineQuery(() => {
     const currentUserQuery = useQuery({
         key: AUTH_QUERY_KEYS.currentUser(),
         query: getUser,
+        staleTime: 1000 * 60 * 30
     })
 
     return {
