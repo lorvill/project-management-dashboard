@@ -10,8 +10,8 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import {useAuthMutations} from "~/queries/auth/auth.mutations";
 import {redirectToGoogleAuth} from "~/utils/auth/auth.utils";
+import {useRegisterMutation} from "~/queries/auth/register.mutation";
 
 const email = ref('')
 const name = ref('')
@@ -20,7 +20,7 @@ const confirmPassword = ref('')
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 
-const { registerMutation } = useAuthMutations()
+const registerMutation = useRegisterMutation()
 
 const onSubmit = () => {
   if (!email.value || !name.value || !password.value || !confirmPassword.value) {

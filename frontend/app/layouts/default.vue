@@ -20,7 +20,7 @@ const user = computed(() =>
         </div>
 
         <div class="flex items-center gap-4">
-          {{ user.displayName }}
+          {{ user?.displayName }}
           <AppDropdown />
         </div>
       </header>

@@ -1,22 +1,23 @@
 import type {RegisterDto, LoginDto} from "~/queries/auth/auth.dto";
 import {apiFetch} from "~/queries/api";
+import type {AuthResponse} from "~~/types/user.types";
 
 export const registerUser = (dto: RegisterDto) => {
-    return apiFetch(`/auth/register`, {
+    return apiFetch<AuthResponse>(`/auth/register`, {
         method: 'POST',
         body: dto
     })
 }
 
 export const loginUser = (dto: LoginDto) => {
-    return apiFetch(`/auth/login`, {
+    return apiFetch<AuthResponse>(`/auth/login`, {
         method: 'POST',
         body: dto
     })
 }
 
 export const logoutUser = () => {
-    return apiFetch(`/auth/logout`, {
+    return apiFetch<void>(`/auth/logout`, {
         method: 'POST'
     })
 }

@@ -9,14 +9,14 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import {useAuthMutations} from "~/queries/auth/auth.mutations";
 import {redirectToGoogleAuth} from "~/utils/auth/auth.utils";
+import {useLoginMutation} from "~/queries/auth/login.mutation";
 
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 
-const { loginMutation } = useAuthMutations()
+const loginMutation = useLoginMutation()
 
 const onSubmit = () => {
   if (!email.value || !password.value) {
