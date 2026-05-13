@@ -2,9 +2,10 @@
 definePageMeta({
   layout: 'auth',
   name: 'registration',
+  middleware: 'guest',
 })
 </script>
 
 <template>
-    <AuthenticationRegistration />
+  <AuthenticationRegistration />
 </template>

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {
-  ArrowRight,
   CheckCircle2,
   Circle,
   Clock3,
@@ -27,6 +26,7 @@ import { Separator } from '@/components/ui/separator'
 
 definePageMeta({
   name: 'dashboard',
+  middleware: 'auth',
 })
 
 interface Project {

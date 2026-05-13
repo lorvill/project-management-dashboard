@@ -4,17 +4,32 @@ import { Eye, EyeOff } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import {
   Field,
-  FieldDescription,
   FieldGroup,
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import {redirectToGoogleAuth} from "~/utils/auth/auth.utils";
+import {useLoginMutation} from "~/queries/auth/login.mutation";
 
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
+
+const loginMutation = useLoginMutation()
+
+const onSubmit = () => {
+  if (!email.value || !password.value) {
+    return
+  }
+
+  loginMutation.mutate(
+      {
+        email: email.value,
+        password: password.value,
+      },
+  )
+}
 </script>
 
 <template>
@@ -37,6 +52,10 @@ const showPassword = ref(false)
         </div>
       </div>
 
+      <form
+          class="w-full space-y-3 sm:space-y-4"
+          @submit.prevent="onSubmit"
+      >
         <FieldGroup class="space-y-5">
           <Field>
             <FieldLabel
@@ -54,10 +73,6 @@ const showPassword = ref(false)
                 placeholder="natala.brak@kmnsstudio.com"
                 class="h-11 w-full rounded-none border-slate-200 px-4 text-sm shadow-none placeholder:text-slate-300 focus-visible:ring-2"
             />
-
-            <FieldDescription class="text-xs text-slate-400">
-              Enter the email linked to your account.
-            </FieldDescription>
           </Field>
 
           <Field>
@@ -104,10 +119,6 @@ const showPassword = ref(false)
                 />
               </Button>
             </div>
-
-            <FieldDescription class="text-xs text-slate-400">
-              Use the password you created during registration.
-            </FieldDescription>
           </Field>
         </FieldGroup>
 
@@ -117,6 +128,7 @@ const showPassword = ref(false)
         >
           Log in
         </Button>
+      </form>
 
       <div class="w-full space-y-5">
         <div class="flex w-full items-center gap-3 sm:gap-4">

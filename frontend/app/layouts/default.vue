@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import {useUserQuery} from "~/queries/user/user.queries";
+
+const {currentUserQuery} = useUserQuery()
+
+const user = computed(() =>
+ currentUserQuery.data.value
+)
+</script>
+
 <template>
   <div class="h-dvh bg-linear-to-br from-gray-100 via-gray-400 to-[#cfdaec] flex items-center justify-center md:p-4 ">
     <SidebarProvider class="flex flex-col w-full h-full md:h-[95vh] md:rounded-xl bg-white shadow-2xl overflow-hidden">
@@ -10,6 +20,7 @@
         </div>
 
         <div class="flex items-center gap-4">
+          {{ user?.displayName }}
           <AppDropdown />
         </div>
       </header>
