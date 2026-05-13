@@ -29,6 +29,7 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@pinia/colada-nuxt',
     '@pinia/nuxt',
+    '@vee-validate/nuxt',
   ],
 
   shadcn: {
