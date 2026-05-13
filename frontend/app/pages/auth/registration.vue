@@ -7,7 +7,5 @@ definePageMeta({
 </script>
 
 <template>
-  <div>
-    <AuthenticationRegistration />
-  </div>
+  <AuthenticationRegistration />
 </template>
