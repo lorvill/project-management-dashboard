@@ -6,17 +6,20 @@ const {currentUserQuery} = useUserQuery()
 const user = computed(() =>
  currentUserQuery.data.value
 )
+
 </script>
 
 <template>
-  <div class="h-dvh bg-linear-to-br from-gray-100 via-gray-400 to-[#cfdaec] flex items-center justify-center md:p-4 ">
-    <SidebarProvider class="flex flex-col w-full h-full md:h-[95vh] md:rounded-xl bg-white shadow-2xl overflow-hidden">
+  <div class="h-dvh overflow-hidden bg-linear-to-br from-orange-50 via-orange-400/20 to-amber-900/10 p-4 grid">
+    <SidebarProvider
+        class="min-h-0 w-full max-w-407.5 mx-auto flex flex-col rounded-3xl bg-white shadow-2xl overflow-hidden"
+    >
 
-      <header class="w-full h-14 shrink-0 border-b border-slate-200  backdrop-blur-md px-4 flex items-center justify-between z-10">
-        <div class="flex items-center gap-5.5">
-          <SidebarTrigger class="text-indigo-900 group-hover:text-indigo-500 transition-colors" />
-          <div class="h-6 w-px bg-slate-200" />
-          <span class="font-black text-blue-900 tracking-tight text-xl">DASHBY</span>
+      <header class="w-full h-14 shrink-0 border-b border-slate-200 backdrop-blur-md px-4 flex items-center justify-between z-10">
+        <div class="flex items-center gap-5">
+          <SidebarTrigger class="text-amber-900 transition-colors cursor-pointer" />
+          <div class="h-8 w-px p-0 bg-slate-200" />
+          <span class="font-normal text-amber-900 tracking-tight text-2xl pl-1">DASHBY</span>
         </div>
 
         <div class="flex items-center gap-4">

@@ -10,7 +10,7 @@ import {
   ChevronUp,
   NotebookIcon,
   ListIcon,
-  TrashIcon, ZapIcon, SearchIcon, HomeIcon
+  TrashIcon, ZapIcon, SearchIcon, HomeIcon, PenLine
 } from 'lucide-vue-next'
 import {
   Sidebar,
@@ -46,7 +46,7 @@ const menuSections: MenuSection[] = [
     label: 'MAIN',
     items: [
       { title: 'Search', icon: SearchIcon },
-      { title: 'Dashboard', icon: HomeIcon, to: { name: 'dashboard' } },
+      { title: 'Dashboard', icon: LayoutGrid, to: { name: 'dashboard' } },
       { title: 'Notes', icon: NotebookIcon },
       { title: 'Task List', icon: ListIcon },
     ]
@@ -56,9 +56,9 @@ const menuSections: MenuSection[] = [
     position: 'content',
     label: 'WORKSPACES',
     items: [
-      { title: 'Add New Project', icon: PlusCircle, addNew: true },
       { title: 'All Projects', icon: ZapIcon, addNew: true },
-      { title: 'Product Squad', icon: LayoutGrid },
+      { title: 'Add New Project', icon: PlusCircle, addNew: true },
+      { title: 'Product Squad', icon: PenLine },
     ]
   },
   {
@@ -92,7 +92,7 @@ const getVisibleItems = (section: MenuSection) =>
       <SidebarGroup class="border-b border-slate-300/60 pb-4 px-3">
         <SidebarGroupLabel
             v-if="section.label"
-            class="py-2 text-[10px] font-bold tracking-widest text-indigo-600 uppercase"
+            class="py-2 text-[12px] font-extrabold tracking-widest text-black uppercase"
         >
           {{ section.label }}
         </SidebarGroupLabel>
@@ -100,7 +100,7 @@ const getVisibleItems = (section: MenuSection) =>
         <SidebarMenu>
           <SidebarMenuItem v-for="item in section.items" :key="item.title">
             <SidebarMenuButton
-                class="h-8 gaprounded-lg transition-all duration-200 cursor-pointer text-neutral-600 hover:bg-neutral-100 hover:text-neutral-950"
+                class="h-9 rounded-2xl transition-all duration-200 cursor-pointer text-neutral-600 hover:bg-neutral-100 hover:text-neutral-950 "
                 as-child
             >
               <NuxtLink :to="item.to">
@@ -118,7 +118,7 @@ const getVisibleItems = (section: MenuSection) =>
         <SidebarGroup class="pb-0">
           <SidebarGroupLabel
               v-if="section.label"
-              class="py-2 text-[10px] font-bold tracking-widest text-indigo-600 uppercase"
+              class="py-2 text-[11px] font-extrabold tracking-widest text-black uppercase"
           >
             {{ section.label }}
           </SidebarGroupLabel>
@@ -126,7 +126,7 @@ const getVisibleItems = (section: MenuSection) =>
           <SidebarMenu>
             <SidebarMenuItem v-for="item in getVisibleItems(section)" :key="item.title">
               <SidebarMenuButton
-                  class="h-8 rounded-lg transition-all duration-200 cursor-pointer group"
+                  class="h-9 rounded-2xl transition-all duration-200 cursor-pointer group"
                   :class="item.addNew
                   ? 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-950'
                   : 'text-neutral-400 hover:bg-neutral-50 hover:text-neutral-600'"
@@ -159,7 +159,7 @@ const getVisibleItems = (section: MenuSection) =>
       <SidebarGroup class="border-t border-slate-300/60 pt-2 pb-5">
         <SidebarGroupLabel
             v-if="section.label"
-            class="px-4 py-2 text-[10px] font-bold tracking-widest text-indigo-600 uppercase"
+            class="px-4 py-2 text-[12px] font-bold tracking-widest text-black uppercase"
         >
           {{ section.label }}
         </SidebarGroupLabel>
@@ -167,7 +167,7 @@ const getVisibleItems = (section: MenuSection) =>
         <SidebarMenu>
           <SidebarMenuItem v-for="item in section.items" :key="item.title">
             <SidebarMenuButton
-                class="h-8 px-4 rounded-lg text-neutral-600 transition-all duration-200 cursor-pointer hover:bg-neutral-100 hover:text-neutral-950"
+                class="h-9 px-4 rounded-2xl text-neutral-600 transition-all duration-200 cursor-pointer hover:bg-neutral-100 hover:text-neutral-950"
             >
               <component :is="item.icon" class="w-4 h-4 shrink-0" />
               <span class="flex-1 text-sm truncate ml-0.5">{{ item.title }}</span>
