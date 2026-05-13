@@ -3,7 +3,7 @@ import {logoutUser} from "~/queries/auth/auth.api";
 
 const queryCache = useQueryCache()
 
-export const logoutMutation = useMutation({
+export const useLogoutMutation = defineMutation({
     mutation: logoutUser,
     async onSuccess() {
         queryCache.cancelQueries()

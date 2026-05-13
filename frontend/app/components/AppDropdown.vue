@@ -3,19 +3,14 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {LogOut, Settings, User} from "lucide-vue-next";
-import {useAuthMutations} from "~/queries/auth/auth.mutations";
+import {useLogoutMutation} from "~/queries/auth/logout.mutation";
 const userColor = ref('#4F46E5');
 
-const { logoutMutation } = useAuthMutations()
-
-function logout() {
-  logoutMutation.mutate()
-}
+const logoutMutation = useLogoutMutation();
 </script>
 
 <template>
