@@ -10,14 +10,11 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
+import {redirectToGoogleAuth} from "~/utils/auth/auth.utils";
 
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
-
-const loginWithGoogle = () => {
-  window.location.href = 'http://localhost:5003/auth/google'
-}
 </script>
 
 <template>
@@ -131,7 +128,7 @@ const loginWithGoogle = () => {
         </div>
         <div class="w-full">
           <Button
-              @click="loginWithGoogle"
+              @click="redirectToGoogleAuth"
               type="button"
               variant="outline"
               class="mt-1 h-10 w-full rounded-md bg-neutral-100 text-sm font-medium text-white shadow-[0_14px_24px_rgba(5,8,22,0.24)] hover:bg-neutral-200 sm:h-11 cursor-pointer"
