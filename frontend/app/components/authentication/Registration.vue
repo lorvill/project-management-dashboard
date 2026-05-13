@@ -12,6 +12,8 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
+import {redirectToGoogleAuth} from "~/utils/auth/auth.utils";
+import {useRegisterMutation} from "~/queries/auth/register.mutation";
 
 import { useAuthMutations } from '~/queries/auth/auth.mutations'
 import { registerSchema } from '~/queries/auth/auth.schema'
@@ -33,11 +35,7 @@ const [email, emailProps] = defineField('email')
 const [password, passwordProps] = defineField('password')
 const [confirmPassword, confirmPasswordProps] = defineField('confirmPassword')
 
-const registerWithGoogle = () => {
-  window.location.href = 'http://localhost:5003/auth/google'
-}
-
-const { registerMutation } = useAuthMutations()
+const registerMutation = useRegisterMutation()
 
 watch(() => ({
   email: email.value,
@@ -87,6 +85,7 @@ const onSubmit = handleSubmit(async (values) => {
         'Registration failed. User with this email already exists.'
   }
 })
+}
 </script>
 
 <template>
@@ -280,7 +279,7 @@ const onSubmit = handleSubmit(async (values) => {
 
         <div class="w-full">
           <Button
-              @click="registerWithGoogle"
+              @click="redirectToGoogleAuth"
               type="button"
               variant="outline"
               class="mt-1 h-10 w-full rounded-md bg-neutral-100 text-sm font-medium text-white shadow-[0_14px_24px_rgba(5,8,22,0.24)] hover:bg-neutral-200 sm:h-11 cursor-pointer"

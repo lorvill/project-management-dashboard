@@ -1,11 +1,14 @@
-import {useUserQuery} from "~/queries/user/user.queries";
+import {getCurrentUser} from "~/utils/auth/auth.utils";
 
-export default defineNuxtRouteMiddleware(async () => {
-    const { currentUserQuery } = useUserQuery()
+export default defineNuxtRouteMiddleware(async (to) => {
+  const user = await getCurrentUser()
 
-    try {
-        await currentUserQuery.refresh(true)
-    } catch {
-        return navigateTo({ name: 'login' })
-    }
+  if (!user) {
+    return navigateTo({
+      name: 'login',
+      query: {
+        redirect: to.fullPath
+      }
+    })
+  }
 })

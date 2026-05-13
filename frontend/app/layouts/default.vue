@@ -2,11 +2,11 @@
 import {useUserQuery} from "~/queries/user/user.queries";
 
 const {currentUserQuery} = useUserQuery()
-//
-// const user = computed(() =>
-//  currentUserQuery.data.value
-// )
-//
+
+const user = computed(() =>
+ currentUserQuery.data.value
+)
+
 </script>
 
 <template>
@@ -23,7 +23,7 @@ const {currentUserQuery} = useUserQuery()
         </div>
 
         <div class="flex items-center gap-4">
-<!--          {{ user.displayName }}-->
+          {{ user?.displayName }}
           <AppDropdown />
         </div>
       </header>
