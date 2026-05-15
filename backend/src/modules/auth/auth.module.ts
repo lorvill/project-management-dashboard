@@ -6,6 +6,7 @@ import { GoogleRecaptchaModule } from '@nestlab/google-recaptcha';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getRecaptchaConfig } from '../config/recaptcha.config';
 import { GoogleStrategy } from './strategies/google.strategy';
+import { AccountModule } from '../../account/account.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { GoogleStrategy } from './strategies/google.strategy';
       useFactory: getRecaptchaConfig,
       inject: [ConfigService],
     }),
+    AccountModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, GoogleStrategy],
