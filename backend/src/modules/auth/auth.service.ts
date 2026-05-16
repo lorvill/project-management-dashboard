@@ -13,7 +13,7 @@ import { Request, Response } from 'express';
 import { verify } from 'argon2';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
-import { AccountService } from '../../account/account.service';
+import { AccountService } from '../account/account.service';
 
 @Injectable()
 export class AuthService {
