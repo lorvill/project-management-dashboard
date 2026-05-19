@@ -1,4 +1,4 @@
-import { apiFetch } from '~/queries/api'
+import { apiFetch } from '~/api/api'
 
 export const getUser = () => {
     const headers: Record<string, string> = {}

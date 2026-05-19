@@ -1,5 +1,5 @@
-import {useMutation, useQueryCache} from "@pinia/colada";
-import {logoutUser} from "~/queries/auth/auth.api";
+import {useQueryCache} from "@pinia/colada";
+import {logoutUser} from "~/api/auth/auth.api";
 
 const queryCache = useQueryCache()
 

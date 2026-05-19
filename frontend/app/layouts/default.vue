@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {useUserQuery} from "~/queries/user/user.queries";
+import {useUserQuery} from "../api/user/user.queries";
 
 const {currentUserQuery} = useUserQuery()
 

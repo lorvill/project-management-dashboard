@@ -1,7 +1,7 @@
-import {AUTH_QUERY_KEYS} from "~/queries/auth/auth.keys";
+import {AUTH_QUERY_KEYS} from "~/api/auth/auth.keys";
 import {useQueryCache} from "@pinia/colada";
 import type {AuthResponse} from "~~/types/user.types";
-import {getUser} from "~/queries/user/user.api";
+import {getUser} from "~/api/user/user.api";
 import {FetchError} from "ofetch";
 
 export const redirectToGoogleAuth = () => {

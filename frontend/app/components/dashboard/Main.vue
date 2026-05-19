@@ -21,7 +21,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
-import { useDashboardQuery } from '~/queries/dashboard/dashboard.fakequeries'
+import { useDashboardQuery } from '../../api/dashboard/dashboard.fakequeries'
 
 const { dashboardQuery } = useDashboardQuery()
 

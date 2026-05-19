@@ -1,5 +1,5 @@
-import type {RegisterDto, LoginDto} from "~/queries/auth/auth.dto";
-import {apiFetch} from "~/queries/api";
+import type {RegisterDto, LoginDto} from "~/api/auth/auth.dto";
+import {apiFetch} from "~/api/api";
 import type {AuthResponse} from "~~/types/user.types";
 
 export const registerUser = (dto: RegisterDto) => {

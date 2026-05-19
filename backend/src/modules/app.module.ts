@@ -5,6 +5,7 @@ import { IS_DEV_ENV } from '../libs/common/utils/is-dev.util';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { PassportModule } from '@nestjs/passport';
+import { NotesModule } from './notes/notes.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PassportModule } from '@nestjs/passport';
     PrismaModule,
     UserModule,
     PassportModule.register({ session: true }),
+    NotesModule,
   ],
 })
 export class AppModule {}
