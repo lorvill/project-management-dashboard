@@ -9,15 +9,15 @@ export const createNote = (dto: CreateNoteDto): Promise<Note> => {
   })
 }
 
-export const getAllNotes = () => {
+export const getAllNotes = (): Promise<Note[]> => {
   return apiFetch(`/notes`, {
     method: 'GET',
   })
 }
 
 export const getNote = (id: string | RouteParamValue[] | undefined) => {
-  return apiFetch<void>(`/notes/${id}`, {
-    method: 'GET'
+  return apiFetch(`/notes/${id}`, {
+    method: 'GET',
   })
 }
 

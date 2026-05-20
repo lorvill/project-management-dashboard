@@ -1,0 +1,135 @@
+<script setup lang="ts">
+import { Check, ChevronDown, Search } from 'lucide-vue-next'
+import { Input } from '@/components/ui/input'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+
+type NotesFilter = 'all' | 'pinned'
+type SortOrder = 'newest' | 'oldest'
+
+const props = defineProps<{
+  searchQuery: string
+  activeFilter: NotesFilter
+  sortOrder: SortOrder
+}>()
+
+const emit = defineEmits<{
+  'update:searchQuery': [value: string]
+  'update:activeFilter': [value: NotesFilter]
+  'update:sortOrder': [value: SortOrder]
+  'selectRecentlyDeleted': []
+}>()
+
+const filterLabels: Record<NotesFilter, string> = {
+  all: 'All notes',
+  pinned: 'Pinned',
+}
+
+const sortLabels: Record<SortOrder, string> = {
+  newest: 'Newest',
+  oldest: 'Oldest',
+}
+
+const activeFilterLabel = computed(() => filterLabels[props.activeFilter])
+const activeSortLabel = computed(() => sortLabels[props.sortOrder])
+</script>
+
+<template>
+  <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
+      <DropdownMenu>
+        <DropdownMenuTrigger as-child>
+          <button
+            type="button"
+            class="group inline-flex w-fit items-center gap-1 rounded-md text-left text-2xl font-bold tracking-tight text-slate-950 outline-none transition-colors hover:text-amber-900 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+            aria-label="Select notes filter"
+          >
+            <span>{{ activeFilterLabel }}</span>
+            <ChevronDown class="mt-1 size-5 text-slate-500 transition-colors group-hover:text-amber-900 group-data-[state=open]:text-amber-900" />
+          </button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent
+          align="start"
+          :side-offset="8"
+          class="w-52 rounded-2xl border border-slate-200 bg-white/90 p-1.5 shadow-xl ring-1 ring-black/5 backdrop-blur-md"
+        >
+          <DropdownMenuItem
+            class="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-600 outline-none transition-colors hover:bg-amber-50 hover:text-amber-600"
+            @select="emit('update:activeFilter', 'all')"
+          >
+            <span>All notes</span>
+            <Check v-if="props.activeFilter === 'all'" class="size-4 text-amber-500" />
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            class="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-600 outline-none transition-colors hover:bg-amber-50 hover:text-amber-600"
+            @select="emit('update:activeFilter', 'pinned')"
+          >
+            <span>Pinned</span>
+            <Check v-if="props.activeFilter === 'pinned'" class="size-4 text-amber-500" />
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            class="flex cursor-pointer items-center rounded-lg px-3 py-2 text-sm font-medium text-slate-600 outline-none transition-colors hover:bg-amber-50 hover:text-amber-600"
+            @select="emit('selectRecentlyDeleted')"
+          >
+            Recently deleted
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div class="relative sm:w-72">
+        <Search class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+
+        <Input
+          :model-value="props.searchQuery"
+          placeholder="Search notes"
+          class="h-10 rounded-full border border-slate-200 bg-white pl-9 shadow-xs transition-colors placeholder:text-slate-400 focus-visible:border-amber-600 focus-visible:ring-1 focus-visible:ring-amber-100"
+          @update:model-value="emit('update:searchQuery', String($event))"
+        />
+      </div>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger as-child>
+          <button
+            type="button"
+            class="group inline-flex h-10 min-w-36 items-center justify-between gap-3 rounded-full border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-xs outline-none transition-colors hover:border-amber-200 hover:bg-amber-50/60 hover:text-amber-700 focus-visible:border-amber-300 focus-visible:ring-1 focus-visible:ring-amber-200"
+            aria-label="Sort by"
+          >
+            <span>{{ activeSortLabel }}</span>
+            <ChevronDown class="size-4 text-slate-400 transition-colors group-hover:text-amber-500 group-data-[state=open]:text-amber-500" />
+          </button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent
+          align="end"
+          :side-offset="8"
+          class="w-44 rounded-2xl border border-slate-200 bg-white/90 p-1.5 shadow-xl ring-1 ring-black/5 backdrop-blur-md"
+        >
+          <DropdownMenuItem
+            class="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-600 outline-none transition-colors hover:bg-amber-50 hover:text-amber-600"
+            @select="emit('update:sortOrder', 'newest')"
+          >
+            <span>Newest</span>
+            <Check v-if="props.sortOrder === 'newest'" class="size-4 text-amber-500" />
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            class="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-600 outline-none transition-colors hover:bg-amber-50 hover:text-amber-600"
+            @select="emit('update:sortOrder', 'oldest')"
+          >
+            <span>Oldest</span>
+            <Check v-if="props.sortOrder === 'oldest'" class="size-4 text-amber-500" />
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  </div>
+</template>

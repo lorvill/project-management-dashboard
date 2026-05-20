@@ -28,6 +28,7 @@ export const setUser = (response: AuthResponse) => {
 
 export const getCurrentUser = async () => {
     const queryCache = useQueryCache()
+    console.log('getCurrentUser called. server:', import.meta.server)
 
     try {
         const user = await getUser()
