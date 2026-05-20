@@ -91,16 +91,20 @@ const activeSortLabel = computed(() => sortLabels[props.sortOrder])
         <Input
           :model-value="props.searchQuery"
           placeholder="Search notes"
-          class="h-10 rounded-full border border-slate-200 bg-white pl-9 shadow-xs transition-colors placeholder:text-slate-400 focus-visible:border-amber-600 focus-visible:ring-1 focus-visible:ring-amber-100"
+          class="h-10 rounded-full border border-slate-200 bg-white pl-9 pr-10 shadow-xs transition-all placeholder:text-slate-400 focus-visible:border-orange-600 focus-visible:ring-3 focus-visible:ring-orange-600/15"
           @update:model-value="emit('update:searchQuery', String($event))"
         />
+
+        <kbd class="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-medium leading-none text-slate-400 sm:inline-flex">
+          /
+        </kbd>
       </div>
 
       <DropdownMenu>
         <DropdownMenuTrigger as-child>
           <button
             type="button"
-            class="group inline-flex h-10 min-w-36 items-center justify-between gap-3 rounded-full border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-xs outline-none transition-colors hover:border-amber-200 hover:bg-amber-50/60 hover:text-amber-700 focus-visible:border-amber-300 focus-visible:ring-1 focus-visible:ring-amber-200"
+            class="group inline-flex h-10 min-w-28 items-center justify-between gap-2 rounded-full border border-slate-200 bg-white px-3.5 text-sm font-medium text-slate-700 shadow-xs outline-none transition-colors hover:border-orange-200 hover:bg-orange-50/60 hover:text-orange-700 focus-visible:border-orange-300 focus-visible:ring-3 focus-visible:ring-orange-600/15"
             aria-label="Sort by"
           >
             <span>{{ activeSortLabel }}</span>

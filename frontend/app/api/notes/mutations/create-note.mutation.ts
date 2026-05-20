@@ -19,6 +19,7 @@ export const useCreateNoteMutation = () => {
         content: input.content || '',
         pinned: false,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       }
 
       queryCache.setQueryData<Note[]>(NOTES_QUERY_KEYS.all, old => {
