@@ -1,5 +1,5 @@
 import {apiFetch} from "~/api/api";
-import type {CreateNoteDto, Note} from "~/api/notes/notes.dto";
+import type {CreateNoteDto, Note, UpdateNoteDto} from "~/api/notes/notes.dto";
 import type {RouteParamValue} from "vue-router";
 
 export const createNote = (dto: CreateNoteDto): Promise<Note> => {
@@ -15,9 +15,16 @@ export const getAllNotes = (): Promise<Note[]> => {
   })
 }
 
-export const getNote = (id: string | RouteParamValue[] | undefined) => {
+export const getNote = (id: string): Promise<Note> => {
   return apiFetch(`/notes/${id}`, {
     method: 'GET',
+  })
+}
+
+export const updateNote = ({ id, ...dto }: { id: string } & UpdateNoteDto): Promise<Note> => {
+  return apiFetch(`/notes/${id}`, {
+    method: 'PATCH',
+    body: dto
   })
 }
 

@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Body,
   Param,
   Delete,
@@ -11,6 +12,7 @@ import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { CurrentUserId } from '../../libs/common/decorators/current-userId.decorator';
+import { UpdateNoteDto } from './dto/update-note.dto';
 
 @UseGuards(AuthGuard)
 @Controller('notes')
@@ -35,10 +37,10 @@ export class NotesController {
     return this.notesService.findOne(id, userId);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
-  //   return this.notesService.update(id, updateNoteDto);
-  // }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
+    return this.notesService.update(id, updateNoteDto);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string, @CurrentUserId() userId: string) {

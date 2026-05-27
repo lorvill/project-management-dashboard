@@ -15,8 +15,8 @@ export const useCreateNoteMutation = () => {
 
       const tempNote: Note = {
         id: crypto.randomUUID(),
-        title: input.title || 'Untitled',
-        content: input.content || '',
+        title: input.title || '',
+        content: input.content ?? null,
         pinned: false,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),

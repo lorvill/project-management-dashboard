@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Note } from '~~/types/note.types'
-import NoteCard from '~/components/notes/NoteCard.vue'
+import NoteCard from '~/components/notes/list/NoteCard.vue'
 
 defineProps<{
   notes: Note[]
@@ -21,13 +21,15 @@ const emit = defineEmits<{
           v-for="note in notes"
           :key="note.id"
       >
-        <NoteCard
-            :note="note"
-            @share="emit('share', note)"
-            @delete="emit('delete', note)"
-            @toggle-pin="emit('toggle-pin', note)"
-            @duplicate="emit('duplicate', note)"
-        />
+        <NuxtLink :to="{ name: 'notes-detail', params: { id: note.id } }">
+          <NoteCard
+              :note="note"
+              @share="emit('share', note)"
+              @delete="emit('delete', note)"
+              @toggle-pin="emit('toggle-pin', note)"
+              @duplicate="emit('duplicate', note)"
+          />
+        </NuxtLink>
       </div>
     </TransitionGroup>
   </div>

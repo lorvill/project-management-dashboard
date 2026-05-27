@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   Copy,
-  MoreHorizontal,
   Pin,
   PinOff,
   Send,
@@ -23,6 +22,7 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu'
+import {getNoteContent} from "~/utils/notes/getNoteContent";
 
 const props = defineProps<{
   note: Note
@@ -50,11 +50,8 @@ const updatedDate = computed(() =>
   }).format(new Date(props.note.updatedAt)),
 )
 
-const notePreview = computed(() => {
-  const preview = props.note.content.trim()
-
-  return preview || 'No additional text'
-})
+const noteText = computed(() => getNoteContent(props.note.content))
+const notePreview = computed(() => noteText.value || 'No additional text')
 </script>
 
 <template>
@@ -92,7 +89,7 @@ const notePreview = computed(() => {
         <CardContent class="flex flex-1 flex-col justify-between gap-4 px-4 pb-4 pt-3">
           <p
             class="line-clamp-3 min-h-15 text-sm leading-5 text-slate-500"
-            :class="{ 'text-slate-400': !note.content.trim() }"
+            :class="{ 'text-slate-400': !note.content }"
           >
             {{ notePreview }}
           </p>
@@ -147,7 +144,7 @@ const notePreview = computed(() => {
       class="w-48 rounded-lg border border-slate-200 bg-white p-1.5 text-slate-700 shadow-xl shadow-slate-200/70 ring-1 ring-black/5"
     >
       <ContextMenuItem
-        class="cursor-pointer rounded-md px-2.5 py-2 text-sm font-medium outline-none transition-colors hover:bg-slate-100 hover:text-slate-950 focus:bg-slate-100 focus:text-slate-950 data-[highlighted]:bg-slate-100 data-[highlighted]:text-slate-950"
+        class="cursor-pointer rounded-md px-2.5 py-2 text-sm font-medium outline-none transition-colors hover:bg-slate-100 hover:text-slate-950 focus:bg-slate-100 focus:text-slate-950 data-highlighted:bg-slate-100 data-highlighted:text-slate-950"
         @select="emit('share', note)"
       >
         <Send class="size-4 text-slate-500" />
@@ -155,7 +152,7 @@ const notePreview = computed(() => {
       </ContextMenuItem>
 
       <ContextMenuItem
-        class="cursor-pointer rounded-md px-2.5 py-2 text-sm font-medium outline-none transition-colors hover:bg-slate-100 hover:text-slate-950 focus:bg-slate-100 focus:text-slate-950 data-[highlighted]:bg-slate-100 data-[highlighted]:text-slate-950"
+        class="cursor-pointer rounded-md px-2.5 py-2 text-sm font-medium outline-none transition-colors hover:bg-slate-100 hover:text-slate-950 focus:bg-slate-100 focus:text-slate-950 data-highlighted:bg-slate-100 data-highlighted:text-slate-950"
         @select="emit('togglePin', note)"
       >
         <Pin
@@ -170,7 +167,7 @@ const notePreview = computed(() => {
       </ContextMenuItem>
 
       <ContextMenuItem
-        class="cursor-pointer rounded-md px-2.5 py-2 text-sm font-medium outline-none transition-colors hover:bg-slate-100 hover:text-slate-950 focus:bg-slate-100 focus:text-slate-950 data-[highlighted]:bg-slate-100 data-[highlighted]:text-slate-950"
+        class="cursor-pointer rounded-md px-2.5 py-2 text-sm font-medium outline-none transition-colors hover:bg-slate-100 hover:text-slate-950 focus:bg-slate-100 focus:text-slate-950 data-highlighted:bg-slate-100 data-highlighted:text-slate-950"
         @select="emit('duplicate', note)"
       >
         <Copy class="size-4 text-slate-500" />
@@ -181,7 +178,7 @@ const notePreview = computed(() => {
 
       <ContextMenuItem
         variant="destructive"
-        class="cursor-pointer rounded-md px-2.5 py-2 text-sm font-medium text-red-600 outline-none transition-colors hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:text-red-700 data-[highlighted]:bg-red-50 data-[highlighted]:text-red-700"
+        class="cursor-pointer rounded-md px-2.5 py-2 text-sm font-medium text-red-600 outline-none transition-colors hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:text-red-700 data-highlighted:bg-red-50 data-highlighted:text-red-700"
         @select="emit('delete', note)"
       >
         <Trash2 class="size-4" />
