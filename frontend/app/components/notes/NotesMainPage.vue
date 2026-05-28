@@ -1,24 +1,25 @@
 <script setup lang="ts">
-import type { Note } from '~~/types/note.types'
+import type {Note} from '~~/types/note.types'
 import NotesToolbar from '~/components/notes/list/NotesToolbar.vue'
 import NotesGrid from '~/components/notes/list/NotesGrid.vue'
 import NotesGridSkeleton from '~/components/notes/list/NotesGridSkeleton.vue'
 import NotesEmptyState from '~/components/notes/list/NotesEmptyState.vue'
-import { Button } from '@/components/ui/button'
-import { useNoteQuery } from '~/api/notes/queries/all-notes.query'
-import { useCreateNoteMutation } from '~/api/notes/mutations/create-note.mutation'
-import { Plus } from 'lucide-vue-next'
+import {Button} from '@/components/ui/button'
+import {useNoteQuery} from '~/api/notes/queries/all-notes.query'
+import {useCreateNoteMutation} from '~/api/notes/mutations/create-note.mutation'
+import {Plus} from 'lucide-vue-next'
 import {useDeleteNoteMutation} from "~/api/notes/mutations/delete-note.mutation";
-import { getNoteContent } from "~/utils/notes/getNoteContent";
+import {useRouteQuery} from "@vueuse/router";
+import {getNoteContent} from "~/utils/notes/getNoteContent";
 
 type NotesFilter = 'all' | 'pinned'
 type SortOrder = 'newest' | 'oldest'
 
-const searchQuery = ref('')
-const activeFilter = ref<NotesFilter>('all')
-const sortOrder = ref<SortOrder>('newest')
+const searchQuery = useRouteQuery<string>('search', '')
+const activeFilter = useRouteQuery<NotesFilter>('active', 'all')
+const sortOrder = useRouteQuery<SortOrder>('sort', 'newest')
 
-const { data, isPending, status, refetch } = useNoteQuery()
+const {data, isPending, status, refetch} = useNoteQuery()
 const createNoteMutation = useCreateNoteMutation()
 const deleteNoteMutation = useDeleteNoteMutation()
 
@@ -48,10 +49,12 @@ const filteredNotes = computed(() => {
 
 const hasNotes = computed(() => notes.value.length > 0)
 
-const handleCreate = () => createNoteMutation.mutate({ title: '', content: {
+const handleCreate = () => createNoteMutation.mutate({
+  title: '', content: {
     type: 'doc',
-    content: [{ type: 'paragraph' }],
-  } })
+    content: [{type: 'paragraph'}],
+  }
+})
 const handleDelete = (note: Note) => deleteNoteMutation.mutate(note.id)
 
 const handleShare = (note: Note) => console.info('Share note', note.id)
@@ -69,7 +72,7 @@ const handleRecentlyDeleted = () => console.info('Recently deleted is not implem
         @select-recently-deleted="handleRecentlyDeleted"
     />
 
-    <NotesGridSkeleton v-if="isPending" />
+    <NotesGridSkeleton v-if="isPending"/>
 
     <NotesEmptyState
         v-else-if="!hasNotes"
@@ -91,7 +94,7 @@ const handleRecentlyDeleted = () => console.info('Recently deleted is not implem
         aria-label="Create note"
         @click="handleCreate"
     >
-      <Plus class="size-7" />
+      <Plus class="size-7"/>
     </Button>
   </section>
 </template>

@@ -11,16 +11,11 @@ import {
 type NotesFilter = 'all' | 'pinned'
 type SortOrder = 'newest' | 'oldest'
 
-const props = defineProps<{
-  searchQuery: string
-  activeFilter: NotesFilter
-  sortOrder: SortOrder
-}>()
+const searchQuery = defineModel<string>('searchQuery', { required: true })
+const activeFilter = defineModel<NotesFilter>('activeFilter', { required: true })
+const sortOrder = defineModel<SortOrder>('sortOrder', { required: true })
 
 const emit = defineEmits<{
-  'update:searchQuery': [value: string]
-  'update:activeFilter': [value: NotesFilter]
-  'update:sortOrder': [value: SortOrder]
   'selectRecentlyDeleted': []
 }>()
 
@@ -34,8 +29,8 @@ const sortLabels: Record<SortOrder, string> = {
   oldest: 'Oldest',
 }
 
-const activeFilterLabel = computed(() => filterLabels[props.activeFilter])
-const activeSortLabel = computed(() => sortLabels[props.sortOrder])
+const activeFilterLabel = computed(() => filterLabels[activeFilter.value])
+const activeSortLabel = computed(() => sortLabels[sortOrder.value])
 </script>
 
 <template>
@@ -60,18 +55,18 @@ const activeSortLabel = computed(() => sortLabels[props.sortOrder])
         >
           <DropdownMenuItem
             class="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-600 outline-none transition-colors hover:bg-amber-50 hover:text-amber-600"
-            @select="emit('update:activeFilter', 'all')"
+            @select="activeFilter = 'all'"
           >
             <span>All notes</span>
-            <Check v-if="props.activeFilter === 'all'" class="size-4 text-amber-500" />
+            <Check v-if="activeFilter === 'all'" class="size-4 text-amber-500" />
           </DropdownMenuItem>
 
           <DropdownMenuItem
             class="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-600 outline-none transition-colors hover:bg-amber-50 hover:text-amber-600"
-            @select="emit('update:activeFilter', 'pinned')"
+            @select="activeFilter = 'pinned'"
           >
             <span>Pinned</span>
-            <Check v-if="props.activeFilter === 'pinned'" class="size-4 text-amber-500" />
+            <Check v-if="activeFilter === 'pinned'" class="size-4 text-amber-500" />
           </DropdownMenuItem>
 
           <DropdownMenuItem
@@ -89,10 +84,9 @@ const activeSortLabel = computed(() => sortLabels[props.sortOrder])
         <Search class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
 
         <Input
-          :model-value="props.searchQuery"
           placeholder="Search notes"
           class="h-10 rounded-full border border-slate-200 bg-white pl-9 pr-10 shadow-xs transition-all placeholder:text-slate-400 focus-visible:border-orange-600 focus-visible:ring-3 focus-visible:ring-orange-600/15"
-          @update:model-value="emit('update:searchQuery', String($event))"
+          v-model="searchQuery"
         />
 
         <kbd class="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-medium leading-none text-slate-400 sm:inline-flex">
@@ -119,18 +113,18 @@ const activeSortLabel = computed(() => sortLabels[props.sortOrder])
         >
           <DropdownMenuItem
             class="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-600 outline-none transition-colors hover:bg-amber-50 hover:text-amber-600"
-            @select="emit('update:sortOrder', 'newest')"
+            @select="sortOrder = 'newest'"
           >
             <span>Newest</span>
-            <Check v-if="props.sortOrder === 'newest'" class="size-4 text-amber-500" />
+            <Check v-if="sortOrder === 'newest'" class="size-4 text-amber-500" />
           </DropdownMenuItem>
 
           <DropdownMenuItem
             class="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-600 outline-none transition-colors hover:bg-amber-50 hover:text-amber-600"
-            @select="emit('update:sortOrder', 'oldest')"
+            @select="sortOrder = 'oldest'"
           >
             <span>Oldest</span>
-            <Check v-if="props.sortOrder === 'oldest'" class="size-4 text-amber-500" />
+            <Check v-if="sortOrder === 'oldest'" class="size-4 text-amber-500" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
