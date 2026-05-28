@@ -1,5 +1,5 @@
 import { defineQuery, useQuery } from '@pinia/colada'
-import { getDashboard } from '~/queries/dashboard/dashboard.fakeapi'
+import { getDashboard } from '~/api/dashboard/dashboard.fakeapi'
 
 export const DASHBOARD_QUERY_KEYS = {
     dashboard: () => ['dashboard'],

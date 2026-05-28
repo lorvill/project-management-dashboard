@@ -1,7 +1,7 @@
-import {AUTH_QUERY_KEYS} from "~/queries/auth/auth.keys";
+import {AUTH_QUERY_KEYS} from "~/api/auth/auth.keys";
 import {useQueryCache} from "@pinia/colada";
 import type {AuthResponse} from "~~/types/user.types";
-import {getUser} from "~/queries/user/user.api";
+import {getUser} from "~/api/user/user.api";
 import {FetchError} from "ofetch";
 
 export const redirectToGoogleAuth = () => {
@@ -28,6 +28,7 @@ export const setUser = (response: AuthResponse) => {
 
 export const getCurrentUser = async () => {
     const queryCache = useQueryCache()
+    console.log('getCurrentUser called. server:', import.meta.server)
 
     try {
         const user = await getUser()

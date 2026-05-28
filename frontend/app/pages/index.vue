@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Main from '~/components/dashboard/Main.vue'
-import { useDashboardQuery } from '~/queries/dashboard/dashboard.fakequeries'
+import { useDashboardQuery } from '~/api/dashboard/dashboard.fakequeries'
 
 definePageMeta({
   name: 'dashboard',
