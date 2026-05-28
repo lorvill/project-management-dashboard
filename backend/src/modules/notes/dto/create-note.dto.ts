@@ -7,6 +7,5 @@ export class CreateNoteDto {
   title?: string;
 
   @IsOptional()
-  @IsString()
-  content?: string;
+  content?: Record<string, any>;
 }

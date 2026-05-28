@@ -1,4 +1,11 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateNoteDto } from './create-note.dto';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class UpdateNoteDto extends PartialType(CreateNoteDto) {}
+export class UpdateNoteDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  title?: string;
+
+  @IsOptional()
+  content?: Record<string, any>;
+}
