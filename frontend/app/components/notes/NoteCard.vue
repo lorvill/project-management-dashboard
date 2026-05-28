@@ -50,11 +50,7 @@ const updatedDate = computed(() =>
   }).format(new Date(props.note.updatedAt)),
 )
 
-const notePreview = computed(() => {
-  const preview = props.note.content.trim()
-
-  return preview || 'No additional text'
-})
+const notePreview = 'No additional text'
 </script>
 
 <template>
@@ -92,7 +88,6 @@ const notePreview = computed(() => {
         <CardContent class="flex flex-1 flex-col justify-between gap-4 px-4 pb-4 pt-3">
           <p
             class="line-clamp-3 min-h-15 text-sm leading-5 text-slate-500"
-            :class="{ 'text-slate-400': !note.content.trim() }"
           >
             {{ notePreview }}
           </p>

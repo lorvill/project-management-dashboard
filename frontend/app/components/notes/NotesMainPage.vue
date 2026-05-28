@@ -9,13 +9,14 @@ import { useNoteQuery } from '~/api/notes/queries/all-notes.query'
 import { useCreateNoteMutation } from '~/api/notes/mutations/create-note.mutation'
 import { Plus } from 'lucide-vue-next'
 import {useDeleteNoteMutation} from "~/api/notes/mutations/delete-note.mutation";
+import {useRouteQuery} from "@vueuse/router";
 
 type NotesFilter = 'all' | 'pinned'
 type SortOrder = 'newest' | 'oldest'
 
-const searchQuery = ref('')
-const activeFilter = ref<NotesFilter>('all')
-const sortOrder = ref<SortOrder>('newest')
+const searchQuery = useRouteQuery<string>('search', '')
+const activeFilter = useRouteQuery<NotesFilter>('active', 'all')
+const sortOrder = useRouteQuery<SortOrder>('sort', 'newest')
 
 const { data, isPending, status, refetch } = useNoteQuery()
 const createNoteMutation = useCreateNoteMutation()

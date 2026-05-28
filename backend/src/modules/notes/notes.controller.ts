@@ -10,7 +10,8 @@ import {
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
-import { CurrentUserId } from '../../libs/common/decorators/current-userId.decorator';
+import { CurrentUser } from '../../libs/common/decorators/current-userId.decorator';
+import type { User } from '../../../generated/prisma/client';
 
 @UseGuards(AuthGuard)
 @Controller('notes')
@@ -18,21 +19,18 @@ export class NotesController {
   constructor(private readonly notesService: NotesService) {}
 
   @Post()
-  create(
-    @CurrentUserId() userId: string,
-    @Body() createNoteDto: CreateNoteDto,
-  ) {
-    return this.notesService.create(userId, createNoteDto);
+  create(@CurrentUser() user: User, @Body() createNoteDto: CreateNoteDto) {
+    return this.notesService.create(user.id, createNoteDto);
   }
 
   @Get()
-  findAll(@CurrentUserId() userId: string) {
-    return this.notesService.findAll(userId);
+  findAll(@CurrentUser() user: User) {
+    return this.notesService.findAll(user.id);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @CurrentUserId() userId: string) {
-    return this.notesService.findOne(id, userId);
+  findOne(@Param('id') id: string, @CurrentUser() user: User) {
+    return this.notesService.findOne(id, user.id);
   }
 
   // @Patch(':id')
@@ -41,7 +39,7 @@ export class NotesController {
   // }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @CurrentUserId() userId: string) {
-    return this.notesService.remove(id, userId);
+  remove(@Param('id') id: string, @CurrentUser() user: User) {
+    return this.notesService.remove(id, user.id);
   }
 }
