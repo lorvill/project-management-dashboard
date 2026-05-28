@@ -6,7 +6,5 @@ definePageMeta({
 </script>
 
 <template>
-  <ClientOnly>
     <NotesDetailPage />
-  </ClientOnly>
 </template>

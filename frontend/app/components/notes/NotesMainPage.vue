@@ -10,16 +10,18 @@ import {useCreateNoteMutation} from '~/api/notes/mutations/create-note.mutation'
 import {Plus} from 'lucide-vue-next'
 import {useDeleteNoteMutation} from "~/api/notes/mutations/delete-note.mutation";
 import {useRouteQuery} from "@vueuse/router";
-import {getNoteContent} from "~/utils/notes/getNoteContent";
-
-type NotesFilter = 'all' | 'pinned'
-type SortOrder = 'newest' | 'oldest'
+import type {NotesFilter, SortOrder} from "~/types/common";
 
 const searchQuery = useRouteQuery<string>('search', '')
 const activeFilter = useRouteQuery<NotesFilter>('active', 'all')
 const sortOrder = useRouteQuery<SortOrder>('sort', 'newest')
 
-const {data, isPending, status, refetch} = useNoteQuery()
+const {data, isPending} = useNoteQuery({
+  search: searchQuery,
+  active: activeFilter,
+  sort: sortOrder,
+})
+
 const createNoteMutation = useCreateNoteMutation()
 const deleteNoteMutation = useDeleteNoteMutation()
 
@@ -31,21 +33,6 @@ const notes = computed<Note[]>(() =>
       pinned: false,
     })),
 )
-
-const filteredNotes = computed(() => {
-  const query = searchQuery.value.trim().toLowerCase()
-
-  return notes.value
-      .filter((note) => activeFilter.value === 'all' || note.pinned)
-      .filter((note) => {
-        const text = getNoteContent(note.content)
-        return !query || `${note.title ?? ''} ${text}`.toLowerCase().includes(query)
-      })
-      .sort((a, b) => {
-        const dir = sortOrder.value === 'newest' ? -1 : 1
-        return a.createdAt < b.createdAt ? dir : -dir
-      })
-})
 
 const hasNotes = computed(() => notes.value.length > 0)
 
@@ -80,7 +67,7 @@ const handleRecentlyDeleted = () => console.info('Recently deleted is not implem
 
     <NotesGrid
         v-else
-        :notes="filteredNotes"
+        :notes="notes"
         @share="handleShare"
         @delete="handleDelete"
         @toggle-pin="handleTogglePin"

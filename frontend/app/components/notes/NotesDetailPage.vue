@@ -10,8 +10,7 @@ import Typography from '@tiptap/extension-typography'
 import {useUpdateNoteMutation} from "~/api/notes/mutations/update-note.mutation";
 
 const route = useRoute()
-const noteId = String(route.params.id ?? '')
-
+const noteId = computed(() => String(route.params.id ?? ''))
 const { data: currentNote } = useCurrentNotesQuery(noteId)
 
 const title = ref('')
@@ -49,7 +48,7 @@ function save() {
   if (!editor.value) return
 
   mutate({
-    id: noteId,
+    id: noteId.value,
     title: title.value,
     content: editor.value.getJSON(),
   })

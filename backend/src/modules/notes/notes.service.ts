@@ -3,6 +3,7 @@ import { CreateNoteDto } from './dto/create-note.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { Prisma } from '../../../generated/prisma/client';
+import { FilterAndSortDto } from './dto/filter-and-sort.dto';
 
 @Injectable()
 export class NotesService {
@@ -18,13 +19,18 @@ export class NotesService {
     });
   }
 
-  async findAll(userId: string) {
+  async findAll(userId: string, query: FilterAndSortDto) {
+    const { search, active, sort } = query;
     return this.prismaService.note.findMany({
       where: {
         userId,
+        ...(search && {
+          OR: [{ title: { contains: search, mode: 'insensitive' } }],
+        }),
+        ...(active === 'pinned' && { isPinned: false }),
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: sort === 'oldest' ? 'asc' : 'desc',
       },
     });
   }

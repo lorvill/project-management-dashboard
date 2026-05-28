@@ -1,6 +1,5 @@
 import {apiFetch} from "~/api/api";
 import type {CreateNoteDto, Note, UpdateNoteDto} from "~/api/notes/notes.dto";
-import type {RouteParamValue} from "vue-router";
 
 export const createNote = (dto: CreateNoteDto): Promise<Note> => {
   return apiFetch(`/notes`, {
@@ -9,9 +8,14 @@ export const createNote = (dto: CreateNoteDto): Promise<Note> => {
   })
 }
 
-export const getAllNotes = (): Promise<Note[]> => {
-  return apiFetch(`/notes`, {
+export const getAllNotes = (params: {
+  search?: string
+  active?: 'all' | 'pinned'
+  sort?: 'newest' | 'oldest'
+}): Promise<Note[]> => {
+  return apiFetch('/notes', {
     method: 'GET',
+    query: params,
   })
 }
 

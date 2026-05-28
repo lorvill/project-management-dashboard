@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
@@ -14,6 +15,7 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { CurrentUser } from '../../libs/common/decorators/current-userId.decorator';
 import type { User } from '../../../generated/prisma/client';
+import { FilterAndSortDto } from './dto/filter-and-sort.dto';
 
 @UseGuards(AuthGuard)
 @Controller('notes')
@@ -26,8 +28,8 @@ export class NotesController {
   }
 
   @Get()
-  findAll(@CurrentUser() user: User) {
-    return this.notesService.findAll(user.id);
+  findAll(@CurrentUser() user: User, @Query() query: FilterAndSortDto) {
+    return this.notesService.findAll(user.id, query);
   }
 
   @Get(':id')
