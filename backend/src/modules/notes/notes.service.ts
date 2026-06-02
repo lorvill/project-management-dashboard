@@ -20,19 +20,38 @@ export class NotesService {
   }
 
   async findAll(userId: string, query: FilterAndSortDto) {
-    const { search, active, sort } = query;
-    return this.prismaService.note.findMany({
-      where: {
-        userId,
-        ...(search && {
-          OR: [{ title: { contains: search, mode: 'insensitive' } }],
-        }),
-        ...(active === 'pinned' && { isPinned: false }),
+    const { search, active, sort, page = 1, limit = 12 } = query;
+    const where = {
+      userId,
+      ...(search && {
+        OR: [{ title: { contains: search, mode: 'insensitive' as const } }],
+      }),
+      ...(active === 'pinned' && { isPinned: true })
+    };
+
+    const [items, total] = await this.prismaService.$transaction([
+      this.prismaService.note.findMany({
+        where,
+        orderBy: { createdAt: sort === 'oldest' ? 'asc' : 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      
+      this.prismaService.note.count({ where }),
+    ]);
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      items,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages,
+        hasNextPage: page * limit < total,
+        hasPreviousPage: page > 1,
       },
-      orderBy: {
-        createdAt: sort === 'oldest' ? 'asc' : 'desc',
-      },
-    });
+    };
   }
 
   async findOne(id: string, userId: string) {
