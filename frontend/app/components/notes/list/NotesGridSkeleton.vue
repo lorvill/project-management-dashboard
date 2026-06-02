@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
     <Card
         v-for="index in 8"
         :key="index"
-        class="min-h-44 rounded-lg border-slate-200 bg-white px-4 py-4 shadow-xs"
+        class="min-h-40 rounded-lg border-slate-200 bg-white px-4 py-3 shadow-xs"
     >
       <Skeleton class="h-5 w-3/4 bg-slate-200" />
 
