@@ -11,12 +11,13 @@ import {Plus} from 'lucide-vue-next'
 import {useDeleteNoteMutation} from "~/api/notes/mutations/delete-note.mutation";
 import {useRouteQuery} from "@vueuse/router";
 import type {NotesFilter, SortOrder} from "~/types/common";
-import NotesPagination from "~/components/notes/list/NotesPagination.vue";
+import AppPagination from "~/components/common/AppPagination.vue";
+import {useCurrentPage} from "~/composables/common/useCurrentPage";
 
 const searchQuery = useRouteQuery<string>('search', '')
 const activeFilter = useRouteQuery<NotesFilter>('active', 'all')
 const sortOrder = useRouteQuery<SortOrder>('sort', 'newest')
-const currentPage = useRouteQuery<number>('page', 1, { transform: Number })
+const currentPage = useCurrentPage()
 
 watch([searchQuery, activeFilter, sortOrder], () => {
   currentPage.value = 1
@@ -95,14 +96,11 @@ const handleRecentlyDeleted = () => console.info('Recently deleted is not implem
 
       <div
           v-if="meta"
-          class="fixed bottom-12 left-1/2 z-20 flex justify-center rounded-full bg-neutral-50 px-3 py-2 shadow-sm ring-1 ring-slate-200/70"
+          class="fixed bottom-12 left-1/2 z-20 flex justify-center"
       >
-        <NotesPagination
-            :current-page="meta.page"
-            :total-pages="Math.max(meta.totalPages, 1)"
-            :has-next="meta.hasNextPage"
-            :has-prev="meta.hasPreviousPage"
-            @change="currentPage = $event"
+        <AppPagination
+            v-model:page="currentPage"
+            :total-pages="meta.totalPages"
         />
       </div>
     </div>

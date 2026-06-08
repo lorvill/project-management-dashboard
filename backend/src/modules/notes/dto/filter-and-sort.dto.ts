@@ -1,7 +1,7 @@
-import { IsOptional, IsString, IsIn, IsInt, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsOptional, IsString, IsIn } from 'class-validator';
+import { PaginationDto } from '../../pagination/pagination.dto';
 
-export class FilterAndSortDto {
+export class FilterAndSortDto extends PaginationDto {
   @IsOptional()
   @IsString()
   search?: string;
@@ -13,16 +13,4 @@ export class FilterAndSortDto {
   @IsOptional()
   @IsIn(['newest', 'oldest'])
   sort?: 'newest' | 'oldest';
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  page?: number = 1;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  limit?: number = 20;
 }

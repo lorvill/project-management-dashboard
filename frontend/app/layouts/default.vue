@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import {useUserQuery} from "../api/user/user.queries";
+import {useUserQuery} from "~/api/user/user.queries";
+import AppDropdown from "~/components/common/AppDropdown.vue";
 
 const {currentUserQuery} = useUserQuery()
 

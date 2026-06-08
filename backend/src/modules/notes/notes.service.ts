@@ -4,10 +4,14 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { Prisma } from '../../../generated/prisma/client';
 import { FilterAndSortDto } from './dto/filter-and-sort.dto';
+import { PaginationService } from '../pagination/pagination.service';
 
 @Injectable()
 export class NotesService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly paginationService: PaginationService,
+  ) {}
 
   async create(userId: string, data: CreateNoteDto) {
     return this.prismaService.note.create({
@@ -20,38 +24,49 @@ export class NotesService {
   }
 
   async findAll(userId: string, query: FilterAndSortDto) {
-    const { search, active, sort, page = 1, limit = 12 } = query;
-    const where = {
+    const { search, active, sort } = query;
+    const where: Prisma.NoteWhereInput = {
       userId,
-      ...(search && {
-        OR: [{ title: { contains: search, mode: 'insensitive' as const } }],
-      }),
-      ...(active === 'pinned' && { isPinned: true })
     };
 
-    const [items, total] = await this.prismaService.$transaction([
+    if (search) {
+      where.OR = [
+        {
+          title: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      ];
+    }
+
+    if (active === 'pinned') {
+      where.isPinned = true;
+    }
+
+    const { skip, take } = this.paginationService.getParams(query);
+
+    /*
+      SELECT *
+      FROM notes
+      WHERE user_id = ?
+        AND title ILIKE '% ?? %'
+        AND is_pinned = true
+      ORDER BY created_at DESC
+      LIMIT 12
+      OFFSET 12;
+     */
+
+    const [items, total] = await Promise.all([
       this.prismaService.note.findMany({
         where,
         orderBy: { createdAt: sort === 'oldest' ? 'asc' : 'desc' },
-        skip: (page - 1) * limit,
-        take: limit,
+        skip,
+        take,
       }),
-      
       this.prismaService.note.count({ where }),
     ]);
-    const totalPages = Math.ceil(total / limit);
-
-    return {
-      items,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages,
-        hasNextPage: page * limit < total,
-        hasPreviousPage: page > 1,
-      },
-    };
+    return this.paginationService.paginate(items, total, query);
   }
 
   async findOne(id: string, userId: string) {
