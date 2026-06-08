@@ -1,6 +1,7 @@
 import { IsOptional, IsString, IsIn } from 'class-validator';
+import { PaginationDto } from '../../pagination/pagination.dto';
 
-export class FilterAndSortDto {
+export class FilterAndSortDto extends PaginationDto {
   @IsOptional()
   @IsString()
   search?: string;

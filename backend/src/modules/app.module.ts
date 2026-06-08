@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { NotesModule } from './notes/notes.module';
+import { PaginationModule } from './pagination/pagination.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { NotesModule } from './notes/notes.module';
     UserModule,
     PassportModule.register({ session: true }),
     NotesModule,
+    PaginationModule,
   ],
 })
 export class AppModule {}

@@ -58,7 +58,7 @@ const notePreview = computed(() => noteText.value || 'No additional text')
   <ContextMenu>
     <ContextMenuTrigger as-child>
       <Card
-          class="group relative min-h-44 cursor-default rounded-lg border-slate-200 bg-white py-0 shadow-xs transition-all duration-200 ease-out hover:-translate-y-1 hover:border-orange-600/40 hover:shadow-lg hover:shadow-slate-200/70"
+          class="group relative min-h-40 cursor-default rounded-lg border-slate-200 bg-white py-0 shadow-xs transition-all duration-200 ease-out hover:-translate-y-1 hover:border-orange-600/40 hover:shadow-lg hover:shadow-slate-200/70"
       >
         <CardHeader class="px-4 pt-4 pb-0">
           <div class="flex items-start gap-3">
@@ -86,9 +86,9 @@ const notePreview = computed(() => noteText.value || 'No additional text')
           </div>
         </CardHeader>
 
-        <CardContent class="flex flex-1 flex-col justify-between gap-4 px-4 pb-4 pt-3">
+        <CardContent class="flex flex-1 flex-col justify-between gap-3 px-4 pb-3 pt-2.5">
           <p
-            class="line-clamp-3 min-h-15 text-sm leading-5 text-slate-500"
+            class="line-clamp-2 min-h-10 text-sm leading-5 text-slate-500"
             :class="{ 'text-slate-400': !note.content }"
           >
             {{ notePreview }}

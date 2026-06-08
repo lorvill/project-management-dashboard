@@ -1,5 +1,5 @@
 import {apiFetch} from "~/api/api";
-import type {CreateNoteDto, Note, UpdateNoteDto} from "~/api/notes/notes.dto";
+import type {CreateNoteDto, Note, PaginatedResponse, UpdateNoteDto} from "~/api/notes/notes.dto";
 
 export const createNote = (dto: CreateNoteDto): Promise<Note> => {
   return apiFetch(`/notes`, {
@@ -12,7 +12,9 @@ export const getAllNotes = (params: {
   search?: string
   active?: 'all' | 'pinned'
   sort?: 'newest' | 'oldest'
-}): Promise<Note[]> => {
+  page?: number
+  limit?: number
+}): Promise<PaginatedResponse<Note>> => {
   return apiFetch('/notes', {
     method: 'GET',
     query: params,

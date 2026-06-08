@@ -11,22 +11,30 @@ import {Plus} from 'lucide-vue-next'
 import {useDeleteNoteMutation} from "~/api/notes/mutations/delete-note.mutation";
 import {useRouteQuery} from "@vueuse/router";
 import type {NotesFilter, SortOrder} from "~/types/common";
+import AppPagination from "~/components/common/AppPagination.vue";
+import {useCurrentPage} from "~/composables/common/useCurrentPage";
 
 const searchQuery = useRouteQuery<string>('search', '')
 const activeFilter = useRouteQuery<NotesFilter>('active', 'all')
 const sortOrder = useRouteQuery<SortOrder>('sort', 'newest')
+const currentPage = useCurrentPage()
+
+watch([searchQuery, activeFilter, sortOrder], () => {
+  currentPage.value = 1
+})
 
 const {data, isPending} = useNoteQuery({
   search: searchQuery,
   active: activeFilter,
   sort: sortOrder,
+  page: currentPage,
 })
 
 const createNoteMutation = useCreateNoteMutation()
 const deleteNoteMutation = useDeleteNoteMutation()
 
 const notes = computed<Note[]>(() =>
-    (data.value ?? []).map((note) => ({
+    (data.value?.items ?? []).map((note) => ({
       ...note,
       content: note.content ?? null,
       updatedAt: note.updatedAt ?? note.createdAt,
@@ -34,7 +42,18 @@ const notes = computed<Note[]>(() =>
     })),
 )
 
+const meta = computed(() => data.value?.meta)
 const hasNotes = computed(() => notes.value.length > 0)
+
+watch(meta, (value) => {
+  if (!value) return
+
+  const lastPage = Math.max(value.totalPages, 1)
+
+  if (currentPage.value > lastPage) {
+    currentPage.value = lastPage
+  }
+})
 
 const handleCreate = () => createNoteMutation.mutate({
   title: '', content: {
@@ -51,7 +70,7 @@ const handleRecentlyDeleted = () => console.info('Recently deleted is not implem
 </script>
 
 <template>
-  <section class="space-y-7">
+  <section class="flex min-h-full flex-col gap-7 pb-16">
     <NotesToolbar
         v-model:search-query="searchQuery"
         v-model:active-filter="activeFilter"
@@ -59,20 +78,32 @@ const handleRecentlyDeleted = () => console.info('Recently deleted is not implem
         @select-recently-deleted="handleRecentlyDeleted"
     />
 
-    <NotesGridSkeleton v-if="isPending"/>
+    <div class="flex mt-1 flex-1 flex-col gap-7">
+      <NotesGridSkeleton v-if="isPending"/>
 
-    <NotesEmptyState
-        v-else-if="!hasNotes"
-    />
+      <NotesEmptyState
+          v-else-if="!hasNotes"
+      />
 
-    <NotesGrid
-        v-else
-        :notes="notes"
-        @share="handleShare"
-        @delete="handleDelete"
-        @toggle-pin="handleTogglePin"
-        @duplicate="handleDuplicate"
-    />
+      <NotesGrid
+          v-else
+          :notes="notes"
+          @share="handleShare"
+          @delete="handleDelete"
+          @toggle-pin="handleTogglePin"
+          @duplicate="handleDuplicate"
+      />
+
+      <div
+          v-if="meta"
+          class="fixed bottom-12 left-1/2 z-20 flex justify-center"
+      >
+        <AppPagination
+            v-model:page="currentPage"
+            :total-pages="meta.totalPages"
+        />
+      </div>
+    </div>
 
     <Button
         type="button"
