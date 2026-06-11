@@ -21,3 +21,17 @@ export const logoutUser = () => {
         method: 'POST'
     })
 }
+
+export const forgotPassword = (email: string) => {
+    return apiFetch<{exists: boolean}>(`/auth/forgot-password`, {
+        method: 'POST',
+        body: { email }
+    })
+}
+
+export const resetPassword= (token: string, newPassword: string) => {
+    return apiFetch<void>(`/auth/reset-password`, {
+        method: 'PUT',
+        body: { token, newPassword }
+    })
+}

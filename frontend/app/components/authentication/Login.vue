@@ -100,12 +100,11 @@ const onSubmit = handleSubmit(async(values) => {
                 Password
               </FieldLabel>
 
-              <a
-                  href="#"
+              <NuxtLink :to="{ name: 'forgot-password' }"
                   class="text-xs font-medium text-[#f08a5b] transition-colors hover:text-[#e37038]"
               >
                 Forgot password?
-              </a>
+              </NuxtLink>
             </div>
 
             <div class="relative">

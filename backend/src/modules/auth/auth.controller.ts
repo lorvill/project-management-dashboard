@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Put,
   Req,
   Res,
   UseGuards,
@@ -17,6 +18,7 @@ import { LoginDto } from './dto/login.dto';
 import { Roles } from './decorators/roles.decorator';
 import { Recaptcha } from '@nestlab/google-recaptcha';
 import { User } from '../../../generated/prisma/client';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -48,6 +50,16 @@ export class AuthController {
   ) {
     await this.authService.saveSession(request, request.user as User);
     return response.redirect('http://localhost:3000');
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body('email') email: string) {
+    return this.authService.forgotPassword(email);
+  }
+
+  @Put('reset-password')
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto.token, dto.newPassword);
   }
 
   @Post('logout')
