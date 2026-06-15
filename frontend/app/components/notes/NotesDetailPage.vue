@@ -1,33 +1,21 @@
 <script setup lang="ts">
-import { EditorContent, useEditor } from '@tiptap/vue-3'
+import { EditorContent } from '@tiptap/vue-3'
 import NotesToolbarEditor from './detail/NotesToolbarEditor.vue'
 import { useCurrentNotesQuery } from '~/api/notes/queries/current-note.query'
-import StarterKit from '@tiptap/starter-kit'
-import Placeholder from '@tiptap/extension-placeholder'
-import TaskList from '@tiptap/extension-task-list'
-import TaskItem from '@tiptap/extension-task-item'
-import Typography from '@tiptap/extension-typography'
 import {useUpdateNoteMutation} from "~/api/notes/mutations/update-note.mutation";
+import {useDebounceFn, useEventListener} from "@vueuse/core";
 
 const route = useRoute()
 const noteId = computed(() => String(route.params.id ?? ''))
 const { data: currentNote } = useCurrentNotesQuery(noteId)
-
+const { mutate } = useUpdateNoteMutation()
 const title = ref('')
+const save = (content: object) => mutate({
+  id: noteId.value,
+  title: title.value,
+  content })
 
-const editor = useEditor({
-  content: '',
-  extensions: [
-    StarterKit,
-    Placeholder.configure({ placeholder: 'Start writing...' }),
-    TaskList,
-    TaskItem.configure({ nested: true }),
-    Typography,
-  ],
-  editorProps: {
-    attributes: { class: 'text-content' },
-  },
-})
+const editor = useNoteEditor(useDebounceFn(save, 250))
 
 watch([currentNote, editor], ([note, editorInstance]) => {
   if (!note || !editorInstance) return
@@ -42,17 +30,9 @@ watch([currentNote, editor], ([note, editorInstance]) => {
   }
 }, { immediate: true })
 
-const { mutate, isLoading } = useUpdateNoteMutation()
-
-function save() {
-  if (!editor.value) return
-
-  mutate({
-    id: noteId.value,
-    title: title.value,
-    content: editor.value.getJSON(),
-  })
-}
+useEventListener('beforeunload', () => {
+  if (editor.value) save(editor.value.getJSON())
+})
 </script>
 
 <template>
@@ -66,12 +46,7 @@ function save() {
     />
 
     <NotesToolbarEditor v-if="editor" :editor="editor" />
-
     <EditorContent :editor="editor" />
-
-    <button class="bg-white w-30 h-10" :disabled="isLoading" @click="save">
-      {{ isLoading ? 'Saving...' : 'Save' }}
-    </button>
   </div>
 </template>
 
