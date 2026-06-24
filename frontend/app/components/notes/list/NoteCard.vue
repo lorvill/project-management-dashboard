@@ -23,6 +23,7 @@ import {
   ContextMenuTrigger,
 } from '@/components/ui/context-menu'
 import {getNoteContent} from "~/utils/notes/getNoteContent";
+import {useDateFormat} from "@vueuse/core";
 
 const props = defineProps<{
   note: Note
@@ -35,20 +36,8 @@ const emit = defineEmits<{
   duplicate: [note: Note]
 }>()
 
-const createdDate = computed(() =>
-  new Intl.DateTimeFormat('en', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(new Date(props.note.createdAt)),
-)
-
-const updatedDate = computed(() =>
-  new Intl.DateTimeFormat('en', {
-    month: 'short',
-    day: 'numeric',
-  }).format(new Date(props.note.updatedAt)),
-)
+const createdDate = useDateFormat(props.note.createdAt, 'YYYY-MM-DD HH:mm')
+const updatedDate = useDateFormat(props.note.updatedAt, 'YYYY-MM-DD')
 
 const noteText = computed(() => getNoteContent(props.note.content))
 const notePreview = computed(() => noteText.value || 'No additional text')

@@ -30,7 +30,7 @@ const sleep = (ms: number) => {
 }
 
 export const getDashboard = async (): Promise<DashboardData> => {
-    await sleep(2000)
+    // await sleep(2000)
 
     return {
         summary: {
