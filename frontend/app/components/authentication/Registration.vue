@@ -13,8 +13,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import {redirectToGoogleAuth} from "~/utils/auth/auth.utils";
-import {useRegisterMutation} from "~/api/auth/mutations/register.mutation";
-import { registerSchema } from '~/api/auth/auth.zod-schema'
+import {useRegisterMutation} from "../../queries/auth/mutations/register.mutation";
+import { registerSchema } from '../../queries/auth/auth.zod-schema'
 
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)

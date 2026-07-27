@@ -1,0 +1,166 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import {
+  CalendarDays,
+  CircleHelp,
+  Columns3,
+  MoreHorizontal,
+  Plus,
+  Sparkles,
+  Users,
+} from 'lucide-vue-next'
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import type {CreateTaskDto, UpdateTaskDto} from '~/queries/tasks/tasks.dto'
+import { useTasksQuery } from '~/queries/tasks/all-tasks.query'
+import { useCreateTaskMutation } from '~/queries/tasks/mutations/create-task.mutation'
+import { useUpdateTaskMutation } from '~/queries/tasks/mutations/update-task.mutation'
+
+import TasksToolbar from '~/components/tasks/TasksToolbar.vue'
+import TaskRow from '~/components/tasks/TaskRow.vue'
+import NewTaskRow from '~/components/tasks/NewTaskRow.vue'
+import {useDeleteTaskMutation} from "~/queries/tasks/mutations/delete-task.mutation";
+import {Button} from "~/components/ui/button";
+
+const { data: tasks } = useTasksQuery()
+
+const createTask = useCreateTaskMutation()
+const updateTask = useUpdateTaskMutation()
+const deleteTask = useDeleteTaskMutation()
+
+const isCreatingTask = ref(false)
+const newTaskRow = useTemplateRef('new-task-row')
+
+const showNewTaskInput = () => {
+  isCreatingTask.value = true
+  newTaskRow.value?.focus()
+}
+
+const closeNewTaskInput = () => {
+  isCreatingTask.value = false
+}
+
+const handleCreateTask = (payload: CreateTaskDto) => {
+  createTask.mutate({
+    title: payload.title,
+    description: '',
+    status: payload.status,
+  })
+  closeNewTaskInput()
+}
+
+const handleUpdateTask = (id: string, patch: UpdateTaskDto) => {
+  updateTask.mutate({ id, ...patch })
+}
+
+</script>
+
+<template>
+  <section class="min-h-full text-zinc-900 mt-1 ml-1">
+    <div class="mx-auto max-w-7xl">
+      <header class="mb-7">
+        <div class="flex items-center gap-3">
+          <Sparkles class="size-5 text-zinc-800" />
+          <h1 class="font-bold tracking-tight text-zinc-950 sm:text-2xl">
+            Tasks Tracker
+          </h1>
+        </div>
+
+        <p class="mt-2 text-sm font-medium text-zinc-600 sm:text-base">
+          Stay organized with tasks, your way.
+        </p>
+      </header>
+
+      <TasksToolbar @add-task="showNewTaskInput" />
+
+      <div class="hidden overflow-hidden border-b border-zinc-200 sm:block">
+        <Table class="min-w-245 table-fixed">
+          <TableHeader>
+            <TableRow class="border-zinc-200 hover:bg-transparent">
+              <TableHead class="w-[27%] px-3 text-zinc-500">
+                Task name
+              </TableHead>
+
+              <TableHead class="w-[13%] px-3 text-zinc-500">
+                <div class="flex items-center gap-2">
+                  <Sparkles class="size-4 text-zinc-400" />
+                  Status
+                </div>
+              </TableHead>
+
+              <TableHead class="w-[15%] px-3 text-zinc-500">
+                <div class="flex items-center gap-2">
+                  <Users class="size-4 text-zinc-400" />
+                  Assignee
+
+                  <TooltipProvider :delay-duration="250">
+                    <Tooltip>
+                      <TooltipTrigger as-child>
+                        <button
+                            type="button"
+                            class="inline-flex size-5 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-1"
+                            aria-label="About the assignee column"
+                        >
+                          <CircleHelp class="size-4" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent
+                          side="top"
+                          :side-offset="8"
+                          class="max-w-40 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-medium leading-relaxed text-white shadow-lg shadow-black/15"
+                      >
+                        The person responsible for completing the task.
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </TableHead>
+
+              <TableHead class="w-[13%] px-3 text-zinc-500">
+                <div class="flex items-center gap-2">
+                  <CalendarDays class="size-4 text-zinc-400" />
+                  Due date
+                </div>
+              </TableHead>
+
+              <TableHead class="w-[28%] px-3 text-zinc-500">
+                <div class="flex items-center gap-2">
+                  <Columns3 class="size-4 text-zinc-400" />
+                  Description
+                </div>
+              </TableHead>
+
+              <TableHead class="w-[4%] px-2 text-zinc-500">
+                <div class="flex items-center justify-center gap-2">
+                  <Plus class="size-4" />
+                  <MoreHorizontal class="size-4" />
+                </div>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            <TaskRow
+                v-for="task in tasks"
+                :key="task.id"
+                :task="task"
+                @update="handleUpdateTask"
+            />
+
+            <NewTaskRow
+              v-if="isCreatingTask"
+              ref="new-task-row"
+              @create="handleCreateTask"
+              @cancel="closeNewTaskInput"
+          />
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  </section>
+</template>

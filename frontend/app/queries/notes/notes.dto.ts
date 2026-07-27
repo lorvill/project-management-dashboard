@@ -1,0 +1,23 @@
+import type { JSONContent } from '@tiptap/vue-3'
+
+export interface CreateNoteDto {
+  title: string;
+  content?: JSONContent | null;
+}
+
+export interface UpdateNoteDto {
+  title?: string,
+  content?: JSONContent | null
+}
+
+export interface PaginatedResponse<T> {
+  items: T[]
+  meta: {
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+    hasNextPage: boolean
+    hasPreviousPage: boolean
+  }
+}

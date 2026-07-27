@@ -5,10 +5,10 @@ import NotesGrid from '~/components/notes/list/NotesGrid.vue'
 import NotesGridSkeleton from '~/components/notes/list/NotesGridSkeleton.vue'
 import NotesEmptyState from '~/components/notes/list/NotesEmptyState.vue'
 import {Button} from '@/components/ui/button'
-import {useNoteQuery} from '~/api/notes/queries/all-notes.query'
-import {useCreateNoteMutation} from '~/api/notes/mutations/create-note.mutation'
+import {useNoteQuery} from '../../queries/notes/queries/all-notes.query'
+import {useCreateNoteMutation} from '../../queries/notes/mutations/create-note.mutation'
 import {Plus} from 'lucide-vue-next'
-import {useDeleteNoteMutation} from "~/api/notes/mutations/delete-note.mutation";
+import {useDeleteNoteMutation} from "../../queries/notes/mutations/delete-note.mutation";
 import {useRouteQuery} from "@vueuse/router";
 import type {NotesFilter, SortOrder} from "~/types/common";
 import AppPagination from "~/components/common/AppPagination.vue";

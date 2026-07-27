@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { NotesModule } from './notes/notes.module';
 import { PaginationModule } from './pagination/pagination.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PaginationModule } from './pagination/pagination.module';
     PassportModule.register({ session: true }),
     NotesModule,
     PaginationModule,
+    TasksModule,
   ],
 })
 export class AppModule {}

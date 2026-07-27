@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import NotesToolbarEditor from './detail/NotesToolbarEditor.vue'
-import { useCurrentNotesQuery } from '~/api/notes/queries/current-note.query'
+import { useCurrentNotesQuery } from '../../queries/notes/queries/current-note.query'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
 import Typography from '@tiptap/extension-typography'
-import {useUpdateNoteMutation} from "~/api/notes/mutations/update-note.mutation";
+import {useUpdateNoteMutation} from "../../queries/notes/mutations/update-note.mutation";
 
 const route = useRoute()
 const noteId = computed(() => String(route.params.id ?? ''))

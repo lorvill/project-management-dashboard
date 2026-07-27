@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {LogOut, Settings, User} from "lucide-vue-next";
-import {useLogoutMutation} from "~/api/auth/mutations/logout.mutation";
+import {useLogoutMutation} from "../../queries/auth/mutations/logout.mutation";
 const userColor = ref('#4F46E5');
 
 const logoutMutation = useLogoutMutation();
