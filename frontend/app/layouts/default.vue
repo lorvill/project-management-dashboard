@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import {useUserQuery} from "../queries/user/user.queries";
 import AppDropdown from "~/components/common/AppDropdown.vue";
-
-const {currentUserQuery} = useUserQuery()
-
-const user = computed(() =>
- currentUserQuery.data.value
-)
-
 </script>
 
 <template>
@@ -24,7 +16,6 @@ const user = computed(() =>
         </div>
 
         <div class="flex items-center gap-4">
-          {{ user?.displayName }}
           <AppDropdown />
         </div>
       </header>
@@ -32,7 +23,7 @@ const user = computed(() =>
       <div class="flex flex-1 min-h-0 w-full">
         <SidebarAppSidebar />
 
-        <main class="flex-1 min-w-0 overflow-y-auto p-6 bg-neutral-50">
+        <main class="flex-1 min-w-0 overflow-y-auto p-4 bg-neutral-50/40">
           <slot />
         </main>
       </div>
