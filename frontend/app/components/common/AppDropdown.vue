@@ -8,21 +8,30 @@ import {
 } from '@/components/ui/dropdown-menu'
 import {LogOut, Settings, User} from "lucide-vue-next";
 import {useLogoutMutation} from "~/api/auth/mutations/logout.mutation";
-const userColor = ref('#4F46E5');
+import {useUserQuery} from "~/api/user/user.queries";
+import {randomColor} from "~/utils/common/getRandomColor";
 
+const userColor = randomColor();
 const logoutMutation = useLogoutMutation();
+const {currentUserQuery} = useUserQuery()
+
+const user = computed(() =>
+    currentUserQuery.data.value
+)
+const firstLetter = computed(() => user.value?.displayName.charAt(0))
 </script>
 
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger>
-      <section class="flex items-center gap-3 bg-zinc-100 py-1 px-3 rounded-full hover:bg-zinc-200 cursor-pointer">
+      <section class="flex items-center gap-3 bg-zinc-100 py-1 px-3.5 rounded-full hover:bg-zinc-200 cursor-pointer">
         <div
-            class="w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-white text-[10px] font-bold"
+            class="w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-white text-[10px] font-bold"
             :style="{ backgroundColor: userColor }"
-        > U
+        >
+          {{ firstLetter }}
         </div>
-        <span class="text-xs font-medium text-slate-700">lorville</span>
+        <span class="text-sm font-medium text-slate-700">{{ user?.displayName }}</span>
       </section>
     </DropdownMenuTrigger>
 

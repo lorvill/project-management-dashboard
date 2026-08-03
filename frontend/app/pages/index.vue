@@ -11,7 +11,7 @@ const { dashboardQuery: { asyncStatus, data } } = useDashboardQuery()
 </script>
 
 <template>
-  <div>
+  <div class="h-full min-h-0 overflow-hidden">
     <DashboardSkeleton v-if="asyncStatus === 'loading' || !data" />
     <Main v-else :data="data!" />
   </div>

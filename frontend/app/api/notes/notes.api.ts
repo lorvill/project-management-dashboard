@@ -8,7 +8,7 @@ export const createNote = (dto: CreateNoteDto): Promise<Note> => {
   })
 }
 
-export const getAllNotes = (params: {
+export const getAllNotes = (params?: {
   search?: string
   active?: 'all' | 'pinned'
   sort?: 'newest' | 'oldest'
