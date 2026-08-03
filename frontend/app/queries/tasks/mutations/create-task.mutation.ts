@@ -57,6 +57,7 @@ export const useCreateTaskMutation = () => {
     async onSettled(_data, _error, _input, context) {
       if (context) {
         await queryCache.invalidateQueries({ key: TASKS_QUERY_KEYS.all })
+        await queryCache.invalidateQueries({ key: TASKS_QUERY_KEYS.groupedByStatus() })
       }
     }
   })

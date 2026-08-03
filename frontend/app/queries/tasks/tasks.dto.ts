@@ -34,3 +34,11 @@ export interface UpdateTaskDto {
   assigneeId?: string | null
   workspaceId?: string
 }
+
+export interface TaskGroup {
+  count: number
+  tasks: Task[]
+}
+
+export type TasksGroupedByStatus =
+  Record<TaskStatus, TaskGroup>

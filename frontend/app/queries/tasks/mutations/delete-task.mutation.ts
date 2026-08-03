@@ -11,7 +11,7 @@ export const useDeleteTaskMutation = () => {
       await queryCache.invalidateQueries({
         key: TASKS_QUERY_KEYS.all
       })
-      await navigateTo({ name: 'tasks' })
+      await queryCache.invalidateQueries({ key: TASKS_QUERY_KEYS.groupedByStatus() })
     }
   })
 }

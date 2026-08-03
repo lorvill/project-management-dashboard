@@ -51,7 +51,7 @@ const statusDotClasses: Record<TaskStatus, string> = {
       </button>
     </DropdownMenuTrigger>
 
-    <DropdownMenuContent align="start" class="bg-white">
+    <DropdownMenuContent class="bg-white">
       <DropdownMenuItem
           v-for="option in statusOptions"
           :key="option"

@@ -5,7 +5,8 @@ import {getUser} from "~/queries/user/user.api";
 import {FetchError} from "ofetch";
 
 export const redirectToGoogleAuth = () => {
-    window.location.href = 'http://localhost:5003/auth/google'
+    const config = useRuntimeConfig()
+    window.location.href = `${config.public.apiBaseUrl}/auth/google`
 }
 
 export const getAuthRedirect = () => {

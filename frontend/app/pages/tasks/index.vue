@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import TasksMainPage from "~/components/tasks/TasksMainPage.vue";
+import TasksAll from '~/components/tasks/views/all-tasks/TasksAll.vue'
 
 definePageMeta({
   name: 'tasks',
+  layout: 'tasks',
   middleware: 'auth',
 })
 </script>
 
 <template>
-  <tasks-main-page />
+  <TasksAll />
 </template>

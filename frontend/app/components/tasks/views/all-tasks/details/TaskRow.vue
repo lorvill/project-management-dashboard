@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { Task, UpdateTaskDto } from '~/queries/tasks/tasks.dto'
 import { TableCell, TableRow } from '@/components/ui/table'
-import EditableTextCell from '~/components/tasks/EditableTextCell.vue'
-import EditableDateCell from '~/components/tasks/EditableDateCell.vue'
+import EditableTextCell from '~/components/tasks/views/all-tasks/details/EditableTextCell.vue'
+import EditableDateCell from '~/components/tasks/views/all-tasks/details/EditableDateCell.vue'
 import TaskStatusDropdown from '~/components/tasks/TaskStatusDropdown.vue'
 
 const props = defineProps<{ task: Task }>()

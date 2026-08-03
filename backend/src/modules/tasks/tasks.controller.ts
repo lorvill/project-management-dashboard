@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
@@ -14,6 +15,7 @@ import { CurrentUser } from '../../libs/common/decorators/current-userId.decorat
 import type { User } from '../../../generated/prisma/client';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskViewQueryDto } from './dto/view.dto';
 
 @UseGuards(AuthGuard)
 @Controller('tasks')
@@ -28,6 +30,15 @@ export class TasksController {
   @Post()
   createTask(@CurrentUser() user: User, @Body() createTaskDto: CreateTaskDto) {
     return this.tasksService.create(user.id, createTaskDto);
+  }
+
+  // /api/tasks/view?groupBy=status&sort=
+  @Get('view')
+  getTasksByStatus(
+    @CurrentUser() user: User,
+    @Query() query: TaskViewQueryDto,
+  ) {
+    return this.tasksService.getViewTasks(user.id, query.groupBy);
   }
 
   @Patch(':id')

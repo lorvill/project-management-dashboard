@@ -53,6 +53,9 @@ export const useUpdateTaskMutation = () => {
       await queryCache.invalidateQueries({
         key: TASKS_QUERY_KEYS.all
       })
+      await queryCache.invalidateQueries({
+        key: TASKS_QUERY_KEYS.groupedByStatus()
+      })
     }
   }
 )}
