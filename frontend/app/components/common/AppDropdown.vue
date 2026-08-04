@@ -9,10 +9,10 @@ import {
 import {LogOut, Settings, User} from "lucide-vue-next";
 import {useLogoutMutation} from "~/queries/auth/mutations/logout.mutation";
 import {useUserQuery} from "~/queries/user/user.queries";
-import {randomColor} from "~/utils/common/getRandomColor";
+import {useRandomColor} from '~/composables/common/useRandomColor'
 
-const userColor = randomColor();
-const logoutMutation = useLogoutMutation();
+const userColor = useRandomColor()
+const logoutMutation = useLogoutMutation()
 const {currentUserQuery} = useUserQuery()
 
 const user = computed(() =>

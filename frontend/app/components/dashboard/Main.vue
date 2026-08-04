@@ -11,6 +11,7 @@ import {useDateFormat, useNow} from "@vueuse/core";
 import { getLocalTimeZone, today } from '@internationalized/date'
 import type { DateValue } from '@internationalized/date'
 import { Calendar } from '@/components/ui/calendar'
+import {useTasksQuery} from "~/queries/tasks/all-tasks.query";
 
 const selectedDate = ref<DateValue>(today(getLocalTimeZone()))
 const stats = [
@@ -38,43 +39,18 @@ const projects = [
     bg: 'bg-[#f7e9b8]',
   },
 ]
-const tasks = [
-  {
-    id: 1,
-    title: 'Finish dashboard layout',
-    status: 'In progress',
-    assignee: 'test1',
-    dueDate: '3030',
-    description: 'ffffpfp'
-  },
-  {
-    id: 2,
-    title: 'Review project cards',
-    status: 'In progress',
-    assignee: 'test1',
-    dueDate: '3030',
-    tag: 'UI',
-    time: '12:30',
-  },
-  {
-    id: 3,
-    title: 'Update notes section',
-    status: 'In progress',
-    assignee: 'test1',
-    dueDate: '3030',
-    tag: 'Notes',
-    time: '15:00',
-  },
-  {
-    id: 4,
-    title: 'Update notes section',
-    status: 'In progress',
-    assignee: 'test1',
-    dueDate: '3030',
-    tag: 'Notes',
-    time: '15:00',
-  }
-]
+
+const { data: getTasks } = useTasksQuery()
+const tasks = computed(() => {
+  return getTasks.value?.slice(0,3) ?? []
+})
+
+const formatStatus = (status: string) => {
+  return status
+      .toLowerCase()
+      .replaceAll('_', ' ')
+      .replace(/^\w/, letter => letter.toUpperCase())
+}
 
 const getNotes = useNoteQuery({limit: ref(2)})
 const notes = computed(() => {
@@ -190,50 +166,88 @@ const date = useDateFormat(useNow(), 'D MMMM', { locales: 'en-US' })
             </Button>
           </div>
 
-          <div class="flex flex-col gap-2.5 mt-4">
-            <div class="hidden lg:grid lg:grid-cols-[2fr_1fr_1fr_1fr_2fr] px-4 text-[0.8rem] font-medium text-slate-400 gap-3">
+          <div class="mt-4 flex flex-col gap-2.5">
+            <div
+                class="hidden px-6 text-sm font-medium text-slate-400
+           lg:grid lg:grid-cols-[2fr_1fr_1fr_2fr] lg:gap-4"
+            >
               <span>Task name</span>
               <span>Status</span>
-              <span>Assignee</span>
               <span>Due date</span>
               <span>Description</span>
             </div>
 
             <article
-                v-if="tasks.length"
                 v-for="task in tasks"
                 :key="task.id"
-                class="bg-white border border-[#e8e1db] rounded-lg px-4 py-2
-                       lg:grid lg:grid-cols-[2fr_1fr_1fr_1fr_2fr] lg:items-center lg:gap-4 lg:rounded"
+                class="rounded-lg border border-[#e8e1db] bg-white px-6 py-4
+           lg:grid lg:grid-cols-[2fr_1fr_1fr_2fr]
+           lg:items-center lg:gap-4"
             >
-              <p class="text-[0.9rem] font-medium text-[#1e1e1e] mb-2.5 lg:mb-0 lg:font-normal">{{ task.title }}</p>
+              <p
+                  class="mb-3 text-[0.9rem] font-medium text-[#1e1e1e]
+             lg:mb-0 lg:font-normal"
+              >
+                {{ task.title }}
+              </p>
 
-              <div class="grid grid-cols-2 gap-x-4 sm:grid-cols-3 lg:contents">
-                <div class="flex flex-col gap-0.5 lg:contents">
-                  <span class="text-[0.7rem] font-semibold uppercase tracking-[0.04em] text-slate-400 lg:hidden">Status</span>
-                  <span class="text-[0.85rem] text-slate-500 lg:text-[0.875rem]">{{ task.status }}</span>
+              <div class="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 lg:contents">
+                <div class="flex min-w-0 flex-col gap-0.5 lg:contents">
+        <span
+            class="text-[0.7rem] font-semibold uppercase
+                 tracking-[0.04em] text-slate-400 lg:hidden"
+        >
+          Status
+        </span>
+
+                  <span class="text-[0.85rem] text-slate-500 lg:text-[0.875rem]">
+          {{ formatStatus(task.status) }}
+        </span>
                 </div>
-                <div class="flex flex-col gap-0.5 lg:contents">
-                  <span class="text-[0.7rem] font-semibold uppercase tracking-[0.04em] text-slate-400 lg:hidden">Assignee</span>
-                  <span class="text-[0.85rem] text-slate-500 lg:text-[0.875rem]">{{ task.assignee }}</span>
+
+                <div class="flex min-w-0 flex-col gap-0.5 lg:contents">
+        <span
+            class="text-[0.7rem] font-semibold uppercase
+                 tracking-[0.04em] text-slate-400 lg:hidden"
+        >
+          Due date
+        </span>
+
+                  <span class="text-[0.85rem] text-slate-500 lg:text-[0.875rem]">
+          {{
+                      task.dueDate
+                          ? useDateFormat(task.dueDate, 'D MMMM', {
+                            locales: 'en-US',
+                          }).value
+                          : 'No due date'
+                    }}
+        </span>
                 </div>
-                <div class="flex flex-col gap-0.5 lg:contents">
-                  <span class="text-[0.7rem] font-semibold uppercase tracking-[0.04em] text-slate-400 lg:hidden">Due date</span>
-                  <span class="text-[0.85rem] text-slate-500 lg:text-[0.875rem]">{{ task.dueDate }}</span>
-                </div>
-                <div class="flex flex-col gap-0.5 col-span-2 sm:col-auto lg:contents">
-                  <span class="text-[0.7rem] font-semibold uppercase tracking-[0.04em] text-slate-400 lg:hidden">Description</span>
-                  <span class="text-[0.85rem] text-slate-500 lg:text-[0.875rem]">{{ task.description }}</span>
+
+                <div class="flex min-w-0 flex-col gap-0.5 lg:contents">
+        <span
+            class="text-[0.7rem] font-semibold uppercase
+                 tracking-[0.04em] text-slate-400 lg:hidden"
+        >
+          Description
+        </span>
+
+                  <span
+                      class="min-w-0 break-words text-[0.85rem]
+                 text-slate-500 lg:text-[0.875rem]"
+                  >
+          {{ task.description || 'No description' }}
+        </span>
                 </div>
               </div>
             </article>
-
-            <div v-else class="flex items-center mt-28 justify-center">
-            <span class="text-neutral-500 font-light">
-              No notes yet
-            </span>
-              </div>
           </div>
+
+<!--            <div v-else class="flex items-center mt-28 justify-center">-->
+<!--            <span class="text-neutral-500 font-light">-->
+<!--              No notes yet-->
+<!--            </span>-->
+<!--              </div>-->
         </section>
       </main>
 
