@@ -18,6 +18,8 @@ const closeNewTaskInput = () => {
 
 const statusFilter = useRouteQuery<TaskStatus>('status') //ref
 const sortOrder = useRouteQuery<TaskSort>('sort', TaskSort.NEWEST)
+const route = useRoute()
+const isChecklist = computed(() => route.name === 'tasks-checklist')
 
 provide(tasksLayoutKey, {
   isCreatingTask,
@@ -26,7 +28,9 @@ provide(tasksLayoutKey, {
 })</script>
 
 <template>
-  <section class="mt-1 ml-1 min-h-full text-zinc-900">
+  <section
+    class="mt-1 ml-1 min-h-full text-zinc-900"
+  >
     <div class="mx-auto max-w-7xl">
       <header class="mb-7">
         <div class="flex items-center gap-3">
@@ -48,7 +52,7 @@ provide(tasksLayoutKey, {
       />
 
       <div
-          v-if="statusFilter"
+          v-if="!isChecklist && statusFilter"
           class="mt-4 flex min-h-8 items-center text-sm text-orange-600 pb-2"
       >
         <div

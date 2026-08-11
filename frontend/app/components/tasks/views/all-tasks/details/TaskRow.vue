@@ -4,15 +4,22 @@ import { TableCell, TableRow } from '@/components/ui/table'
 import EditableTextCell from '~/components/tasks/views/all-tasks/details/EditableTextCell.vue'
 import EditableDateCell from '~/components/tasks/views/all-tasks/details/EditableDateCell.vue'
 import TaskStatusDropdown from '~/components/tasks/TaskStatusDropdown.vue'
+import TaskActionsContextMenu from '~/components/tasks/TaskActionsContextMenu.vue'
 
 const props = defineProps<{ task: Task }>()
 
 const emit = defineEmits<{
   (e: 'update', id: string, patch: UpdateTaskDto): void
+  (e: 'duplicate', task: Task): void
+  (e: 'remove', id: string): void
 }>()
 </script>
 
 <template>
+  <TaskActionsContextMenu
+    @duplicate="emit('duplicate', task)"
+    @remove="emit('remove', task.id)"
+  >
   <TableRow class="h-9 border-slate-200 hover:bg-zinc-400/10">
     <TableCell class="h-9 p-0 text-zinc-800">
       <EditableTextCell
@@ -55,4 +62,5 @@ const emit = defineEmits<{
 
     <TableCell class="border-l border-zinc-200 px-2 py-0" />
   </TableRow>
+  </TaskActionsContextMenu>
 </template>

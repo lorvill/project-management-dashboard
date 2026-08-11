@@ -21,17 +21,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {useRouteQuery} from "@vueuse/router";
 import {TaskSort, TaskStatus} from "~/queries/tasks/tasks.dto";
-import {getAllTasks} from "~/queries/tasks/tasks.api";
-import {useTasksQuery} from "~/queries/tasks/all-tasks.query";
 
 const route = useRoute()
 const views = computed(() =>
   [
     { name: 'All Tasks', icon: Star, to: { name: 'tasks', query: route.query } },
     { name: 'By Status', icon: CircleDot, to: { name: 'tasks-by-status', query: route.query } },
-    { name: 'Checklist', icon: ListChecks },
+    { name: 'Checklist', icon: ListChecks, to: { name: 'tasks-checklist', query: route.query } },
   ]
 )
 

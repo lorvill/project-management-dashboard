@@ -21,7 +21,8 @@ import NewTaskRow from "~/components/tasks/views/all-tasks/details/NewTaskRow.vu
 import { useTasksQuery } from '~/queries/tasks/all-tasks.query'
 import { useCreateTaskMutation } from '~/queries/tasks/mutations/create-task.mutation'
 import { useUpdateTaskMutation } from '~/queries/tasks/mutations/update-task.mutation'
-import {type CreateTaskDto, TaskSort, TaskStatus, type UpdateTaskDto} from '~/queries/tasks/tasks.dto'
+import { useDeleteTaskMutation } from '~/queries/tasks/mutations/delete-task.mutation'
+import {type CreateTaskDto, type Task, TaskSort, TaskStatus, type UpdateTaskDto} from '~/queries/tasks/tasks.dto'
 import {tasksLayoutKey} from "~/utils/tasks/tasks.utils";
 import {useRouteQuery} from "@vueuse/router";
 
@@ -47,6 +48,7 @@ const { data: tasks } = useTasksQuery({
 
 const createTask = useCreateTaskMutation()
 const updateTask = useUpdateTaskMutation()
+const deleteTask = useDeleteTaskMutation()
 
 watch(isCreatingTask, async (isCreating) => {
   if (!isCreating) return
@@ -66,6 +68,21 @@ const handleCreateTask = (payload: CreateTaskDto) => {
 
 const handleUpdateTask = (id: string, patch: UpdateTaskDto) => {
   updateTask.mutate({ id, ...patch })
+}
+
+const handleDuplicateTask = (task: Task) => {
+  createTask.mutate({
+    title: `${task.title}`,
+    description: task.description ?? undefined,
+    status: task.status,
+    dueDate: task.dueDate,
+    assigneeId: task.assigneeId,
+    workspaceId: task.workspaceId,
+  })
+}
+
+const handleRemoveTask = (id: string) => {
+  deleteTask.mutate(id)
 }
 </script>
 
@@ -142,6 +159,8 @@ const handleUpdateTask = (id: string, patch: UpdateTaskDto) => {
           :key="task.id"
           :task="task"
           @update="handleUpdateTask"
+          @duplicate="handleDuplicateTask"
+          @remove="handleRemoveTask"
         />
 
         <NewTaskRow
