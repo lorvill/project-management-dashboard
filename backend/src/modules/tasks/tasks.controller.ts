@@ -16,6 +16,7 @@ import type { User } from '../../../generated/prisma/client';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskViewQueryDto } from './dto/view.dto';
+import { FilterAndSortDto } from './dto/filter-and-sort.dto';
 
 @UseGuards(AuthGuard)
 @Controller('tasks')
@@ -23,8 +24,8 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Get()
-  getAllTasks(@CurrentUser() user: User) {
-    return this.tasksService.getAll(user.id);
+  getAllTasks(@CurrentUser() user: User, @Query() query: FilterAndSortDto) {
+    return this.tasksService.getAll(user.id, query);
   }
 
   @Post()

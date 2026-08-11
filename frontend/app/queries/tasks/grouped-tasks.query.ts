@@ -6,6 +6,6 @@ export const useGroupedTasksQuery = () => {
     key: () =>
       TASKS_QUERY_KEYS.groupedByStatus(),
     query: getGroupedTasks,
-    staleTime: 1000 * 60,
+    staleTime: 1000 * 60 * 60,
   })
 }

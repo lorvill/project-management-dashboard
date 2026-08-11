@@ -4,12 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Task } from '../../../generated/prisma/client';
+import { Prisma, Task } from '../../../generated/prisma/client';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { TaskStatus } from '../../../generated/prisma/client';
-import { TaskScalarFieldEnum } from '../../../generated/prisma/internal/prismaNamespace';
+import { TaskStatus } from '../../../generated/prisma/enums';
 import { TaskGroupBy, TasksGroupedByStatus } from './dto/view.dto';
+import { FilterAndSortDto, TaskSort } from './dto/filter-and-sort.dto';
 
 @Injectable()
 export class TasksService {
@@ -24,14 +24,20 @@ export class TasksService {
     });
   }
 
-  async getAll(userId: string): Promise<Task[]> {
+  async getAll(userId: string, query: FilterAndSortDto): Promise<Task[]> {
+    const { status, sort } = query;
+
+    const where: Prisma.TaskWhereInput = {
+      OR: [{ createdById: userId }, { assigneeId: userId }],
+    };
+
+    if (status) {
+      where.status = status;
+    }
+
     return this.prismaService.task.findMany({
-      where: {
-        OR: [{ createdById: userId }, { assigneeId: userId }],
-      },
-      orderBy: {
-        createdAt: 'asc',
-      },
+      where,
+      orderBy: { createdAt: sort === TaskSort.OLDEST ? 'desc' : 'asc' },
     });
   }
 

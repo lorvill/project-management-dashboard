@@ -8,7 +8,6 @@ import {
   Search,
   Star,
 } from 'lucide-vue-next'
-
 import { Button } from '@/components/ui/button'
 import {
   Tooltip,
@@ -16,22 +15,37 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-
-const emit = defineEmits<{
-  (e: 'addTask'): void
-}>()
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {useRouteQuery} from "@vueuse/router";
+import {TaskSort, TaskStatus} from "~/queries/tasks/tasks.dto";
+import {getAllTasks} from "~/queries/tasks/tasks.api";
+import {useTasksQuery} from "~/queries/tasks/all-tasks.query";
 
 const route = useRoute()
-const views = [
-  { name: 'All Tasks', icon: Star, to: { name: 'tasks' } },
-  { name: 'By Status', icon: CircleDot, to: { name: 'tasks-by-status' } },
-  { name: 'Checklist', icon: ListChecks },
-]
+const views = computed(() =>
+  [
+    { name: 'All Tasks', icon: Star, to: { name: 'tasks', query: route.query } },
+    { name: 'By Status', icon: CircleDot, to: { name: 'tasks-by-status', query: route.query } },
+    { name: 'Checklist', icon: ListChecks },
+  ]
+)
 
 const tooltipClass =
     'rounded-md bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-50 shadow-md ' +
     'data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade ' +
     'data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade'
+
+const statusFilter = defineModel<TaskStatus | undefined>('statusFilter', { required: true })
+const sortOrder = defineModel<TaskSort>('sortOrder', { required: true })
+
+const emit = defineEmits<{
+  (e: 'addTask'): void
+}>()
 </script>
 
 <template>
@@ -65,15 +79,52 @@ const tooltipClass =
 
           <Tooltip>
             <TooltipTrigger as-child>
-              <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  class="text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900"
-                  aria-label="Filter"
-              >
-                <Filter class="size-4" />
-              </Button>
+              <span class="inline-flex">
+                <DropdownMenu>
+                  <DropdownMenuTrigger as-child>
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-sm"
+                        class="text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 data-[state=open]:bg-zinc-100 data-[state=open]:text-zinc-900"
+                        aria-label="Filter"
+                    >
+                      <Filter class="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent
+                      align="end"
+                      :side-offset="8"
+                      class="w-44 rounded-xl border border-zinc-200 bg-white p-1.5 shadow-lg"
+                  >
+                    <DropdownMenuItem
+                        @select="statusFilter = undefined"
+                        class="gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-zinc-700 cursor-pointer focus:bg-zinc-100 focus:text-zinc-950">
+                      <span class="size-2.5 rounded-full bg-zinc-400" />
+                      All
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        @select="statusFilter = TaskStatus.NOT_STARTED"
+                        class="gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-zinc-700 cursor-pointer focus:bg-zinc-100 focus:text-zinc-950">
+                      <span class="size-2.5 rounded-full border-2 border-zinc-400" />
+                      Not started
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        @select="statusFilter = TaskStatus.IN_PROGRESS"
+                        class="gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-zinc-700 cursor-pointer focus:bg-blue-50 focus:text-blue-700">
+                      <span class="size-2.5 rounded-full bg-blue-500" />
+                      In progress
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        @select="statusFilter = TaskStatus.DONE"
+                        class="gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-zinc-700 cursor-pointer focus:bg-emerald-50 focus:text-emerald-700">
+                      <span class="size-2.5 rounded-full bg-emerald-500" />
+                      Done
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </span>
             </TooltipTrigger>
             <TooltipContent :side-offset="2" :class="tooltipClass">
               Filter by
@@ -82,15 +133,38 @@ const tooltipClass =
 
           <Tooltip>
             <TooltipTrigger as-child>
-              <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  class="text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900"
-                  aria-label="Sort"
-              >
-                <ArrowDownUp class="size-4" />
-              </Button>
+              <span class="inline-flex">
+                <DropdownMenu>
+                  <DropdownMenuTrigger as-child>
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-sm"
+                        class="text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 data-[state=open]:bg-zinc-100 data-[state=open]:text-zinc-900"
+                        aria-label="Filter"
+                    >
+                      <ArrowDownUp class="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent
+                      align="end"
+                      :side-offset="8"
+                      class="w-44 rounded-xl border border-zinc-200 bg-white p-1.5 shadow-lg"
+                  >
+                    <DropdownMenuItem
+                        @select="sortOrder = TaskSort.NEWEST"
+                        class="gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-zinc-700 cursor-pointer focus:bg-zinc-100 focus:text-zinc-950">
+                      Newest
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        @select="sortOrder = TaskSort.OLDEST"
+                        class="gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-zinc-700 cursor-pointer focus:bg-zinc-100 focus:text-zinc-950">
+                      Oldest
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </span>
             </TooltipTrigger>
             <TooltipContent :side-offset="2" :class="tooltipClass">
               Sort

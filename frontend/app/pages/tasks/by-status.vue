@@ -2,16 +2,10 @@
 import TasksByStatus from "~/components/tasks/views/by-status/TasksByStatus.vue";
 
 definePageMeta({
-
-  layout: 'tasks',
   middleware: 'auth',
 })
 </script>
 
 <template>
-
+  <TasksByStatus />
 </template>
-
-<style scoped>
-
-</style>

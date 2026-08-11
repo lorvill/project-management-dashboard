@@ -21,11 +21,11 @@ import NewTaskRow from "~/components/tasks/views/all-tasks/details/NewTaskRow.vu
 import { useTasksQuery } from '~/queries/tasks/all-tasks.query'
 import { useCreateTaskMutation } from '~/queries/tasks/mutations/create-task.mutation'
 import { useUpdateTaskMutation } from '~/queries/tasks/mutations/update-task.mutation'
-import type { CreateTaskDto, UpdateTaskDto } from '~/queries/tasks/tasks.dto'
+import {type CreateTaskDto, TaskSort, TaskStatus, type UpdateTaskDto} from '~/queries/tasks/tasks.dto'
 import {tasksLayoutKey} from "~/utils/tasks/tasks.utils";
+import {useRouteQuery} from "@vueuse/router";
 
 const tasksLayout = inject(tasksLayoutKey)
-
 if (!tasksLayout) {
   throw new Error('TasksAll must be used in tasks layout')
 }
@@ -36,7 +36,15 @@ const {
 } = tasksLayout
 
 const newTaskRow = useTemplateRef('new-task-row')
-const { data: tasks } = useTasksQuery()
+
+const statusFilter = useRouteQuery<TaskStatus>('status') //ref
+const sortOrder = useRouteQuery<TaskSort>('sort')
+
+const { data: tasks } = useTasksQuery({
+  status: statusFilter,
+  sort: sortOrder,
+})
+
 const createTask = useCreateTaskMutation()
 const updateTask = useUpdateTaskMutation()
 

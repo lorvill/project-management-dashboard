@@ -42,3 +42,8 @@ export interface TaskGroup {
 
 export type TasksGroupedByStatus =
   Record<TaskStatus, TaskGroup>
+
+export enum TaskSort {
+  NEWEST = 'newest',
+  OLDEST = 'oldest',
+}

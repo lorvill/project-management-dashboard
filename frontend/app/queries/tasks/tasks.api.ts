@@ -1,8 +1,20 @@
 import {apiFetch} from "~/queries/api";
-import type {CreateTaskDto, Task, TasksGroupedByStatus, UpdateTaskDto} from "~/queries/tasks/tasks.dto";
+import {
+  type CreateTaskDto,
+  type Task,
+  type TasksGroupedByStatus, TaskSort,
+  TaskStatus,
+  type UpdateTaskDto
+} from "~/queries/tasks/tasks.dto";
 
-export const getAllTasks = () : Promise<Task[]>=> {
-  return apiFetch('/tasks', { method: 'GET' })
+export const getAllTasks = (params?: {
+  status?: TaskStatus,
+  sort?: TaskSort,
+}) : Promise<Task[]>=> {
+  return apiFetch('/tasks', {
+    method: 'GET',
+    query: params,
+  })
 };
 
 export const getGroupedTasks =
