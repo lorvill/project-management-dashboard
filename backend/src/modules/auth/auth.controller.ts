@@ -19,6 +19,7 @@ import { Roles } from './decorators/roles.decorator';
 import { Recaptcha } from '@nestlab/google-recaptcha';
 import { User } from '../../../generated/prisma/client';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -53,8 +54,8 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  async forgotPassword(@Body('email') email: string) {
-    return this.authService.forgotPassword(email);
+  async forgotPassword(@Body('email') dto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(dto.email);
   }
 
   @Put('reset-password')
