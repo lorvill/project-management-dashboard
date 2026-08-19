@@ -30,7 +30,8 @@ export const getNote = (id: string): Promise<Note> => {
 export const updateNote = ({ id, ...dto }: { id: string } & UpdateNoteDto): Promise<Note> => {
   return apiFetch(`/notes/${id}`, {
     method: 'PATCH',
-    body: dto
+    body: dto,
+    keepalive: true,
   })
 }
 
