@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import authCover from '@/assets/images/bg-auth.jpg'
+import 'vue-sonner/style.css'
+import { Toaster } from '@/components/ui/sonner'
 </script>
 
 <template>
@@ -34,5 +36,7 @@ import authCover from '@/assets/images/bg-auth.jpg'
         <slot />
       </section>
     </div>
+
+    <Toaster />
   </div>
 </template>
