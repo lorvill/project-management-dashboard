@@ -1,5 +1,5 @@
-import {removeNote} from "~/queries/notes/notes.api";
-import {NOTES_QUERY_KEYS} from "~/queries/notes/notes.keys";
+import { removeNote } from "~/api/notes.api";
+import { NOTES_QUERY_KEYS } from "~/queries/notes/notes.keys";
 
 export const useDeleteNoteMutation = defineMutation({
   mutation: removeNote,

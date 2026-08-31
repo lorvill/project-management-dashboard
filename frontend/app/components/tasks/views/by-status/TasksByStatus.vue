@@ -17,6 +17,10 @@ interface Column {
   taskIconWrapperClass: string
 }
 
+type InputExpose = {
+  focus: () => void
+}
+
 const COLUMNS: Column[] = [
   {
     status: TaskStatus.NOT_STARTED,
@@ -77,13 +81,13 @@ const newTaskTitles = reactive<Record<TaskStatus, string>>({
   DONE: '',
 })
 
-function openNewTaskInput(status: TaskStatus) {
+const taskInputs = useTemplateRef<InputExpose[]>('task-input')
+
+async function openNewTaskInput(status: TaskStatus) {
   activeColumn.value = status
-  nextTick(() => {
-    document
-        .querySelector<HTMLInputElement>(`[data-task-input="${status}"]`)
-        ?.focus()
-  })
+  await nextTick()
+
+  taskInputs.value?.[0]?.focus()
 }
 
 function closeNewTaskInput(status: TaskStatus) {
@@ -189,6 +193,7 @@ function handleNewTaskBlur(status: TaskStatus) {
             <component :is="column.icon" class="size-5 shrink-0" :class="column.iconClass" />
 
             <Input
+                ref="task-input"
                 v-model="newTaskTitles[column.status]"
                 :data-task-input="column.status"
                 placeholder="New task"

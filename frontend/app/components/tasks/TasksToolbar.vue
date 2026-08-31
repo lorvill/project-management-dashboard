@@ -32,6 +32,13 @@ const views = computed(() =>
   ]
 )
 
+const dropdownMenuItems = [
+  { name: 'All', status: undefined, icon: 'size-2.5 rounded-full bg-zinc-400' },
+  { name: 'Not started', status: TaskStatus.NOT_STARTED, icon: 'size-2.5 rounded-full border-2 border-zinc-400' },
+  { name: 'In Progress', status: TaskStatus.IN_PROGRESS, icon: 'size-2.5 rounded-full bg-blue-500' },
+  { name: 'Done', status: TaskStatus.DONE, icon: 'size-2.5 rounded-full bg-emerald-500' },
+]
+
 const tooltipClass =
     'rounded-md bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-50 shadow-md ' +
     'data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade ' +
@@ -52,10 +59,8 @@ const emit = defineEmits<{
           v-for="view in views"
           :key="view.name"
           :to="view.to"
-          class="inline-flex h-9 items-center gap-2 rounded-full px-3 text-sm font-semibold transition-all duration-200"
-          :class="route.name === view.to?.name
-            ? 'bg-zinc-100 text-zinc-950'
-            : 'text-zinc-700 hover:bg-zinc-50'"
+          class="inline-flex h-9 items-center gap-2 rounded-full px-3 text-sm font-semibold text-zinc-900 transition-all duration-200 hover:bg-zinc-100"
+          exact-active-class="bg-zinc-100 text-zinc-950"
       >
         <component :is="view.icon" class="size-4" />
         {{ view.name }}
@@ -96,28 +101,13 @@ const emit = defineEmits<{
                       class="w-44 rounded-xl border border-zinc-200 bg-white p-1.5 shadow-lg"
                   >
                     <DropdownMenuItem
-                        @select="statusFilter = undefined"
-                        class="gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-zinc-700 cursor-pointer focus:bg-zinc-100 focus:text-zinc-950">
-                      <span class="size-2.5 rounded-full bg-zinc-400" />
-                      All
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                        @select="statusFilter = TaskStatus.NOT_STARTED"
-                        class="gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-zinc-700 cursor-pointer focus:bg-zinc-100 focus:text-zinc-950">
-                      <span class="size-2.5 rounded-full border-2 border-zinc-400" />
-                      Not started
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                        @select="statusFilter = TaskStatus.IN_PROGRESS"
-                        class="gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-zinc-700 cursor-pointer focus:bg-blue-50 focus:text-blue-700">
-                      <span class="size-2.5 rounded-full bg-blue-500" />
-                      In progress
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                        @select="statusFilter = TaskStatus.DONE"
-                        class="gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-zinc-700 cursor-pointer focus:bg-emerald-50 focus:text-emerald-700">
-                      <span class="size-2.5 rounded-full bg-emerald-500" />
-                      Done
+                      v-for="item in dropdownMenuItems"
+                      :key="item.name"
+                      @select="statusFilter = item.status"
+                      class="gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-zinc-700 cursor-pointer focus:bg-emerald-50 focus:text-emerald-700"
+                    >
+                      <span :class="item.icon" />
+                      {{ item.name }}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

@@ -1,6 +1,6 @@
 import {defineQuery, useQuery} from "@pinia/colada";
 import {NOTES_QUERY_KEYS} from "~/queries/notes/notes.keys";
-import {getAllNotes, getNote} from "~/queries/notes/notes.api";
+import {getAllNotes, getNote} from "~/api/notes.api";
 
 type NotesFilter = 'all' | 'pinned'
 type SortOrder = 'newest' | 'oldest'

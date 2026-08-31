@@ -1,5 +1,5 @@
 import { defineQuery, useQuery } from '@pinia/colada'
-import { getUser } from '~/queries/user/user.api'
+import { getUser } from '~/api/user.api'
 import { AUTH_QUERY_KEYS } from '~/queries/auth/auth.keys'
 
 export const useUserQuery = defineQuery(() => {

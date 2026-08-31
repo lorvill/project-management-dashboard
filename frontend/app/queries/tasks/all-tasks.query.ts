@@ -1,6 +1,6 @@
 import {TASKS_QUERY_KEYS} from "~/queries/tasks/tasks.keys";
-import {getAllTasks} from "~/queries/tasks/tasks.api";
 import {TaskSort, type TaskStatus} from "~/queries/tasks/tasks.dto";
+import {getAllTasks} from "~/api/tasks.api";
 
 export const useTasksQuery = (params?: {
   status: MaybeRefOrGetter<TaskStatus>; // now it's ref but if it was just 'TaskStatus' it wouldn't be ref, it would be just value

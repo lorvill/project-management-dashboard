@@ -58,9 +58,10 @@ const firstLetter = computed(() => user.value?.displayName.charAt(0))
 
       <DropdownMenuItem
           class="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 outline-none transition-all duration-200 rounded-lg cursor-pointer hover:bg-red-50 hover:text-red-600 group"
+          @select="logoutMutation.mutate()"
       >
         <component :is="LogOut" class="w-4 h-4 text-slate-400 group-hover:text-red-500 transition-colors" />
-        <span @click="logoutMutation.mutate()" class="font-medium">Log Out</span>
+        <span class="font-medium">Log Out</span>
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>

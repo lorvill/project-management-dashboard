@@ -1,5 +1,5 @@
 import {defineMutation} from "@pinia/colada";
-import {registerUser} from "~/queries/auth/auth.api";
+import {registerUser} from "~/api/auth.api";
 import {getAuthRedirect, setUser} from "~/utils/auth/auth.utils";
 
 export const useRegisterMutation = defineMutation({

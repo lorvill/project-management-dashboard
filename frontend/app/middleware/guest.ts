@@ -1,9 +1,12 @@
 import {getCurrentUser} from "~/utils/auth/auth.utils";
 
 export default defineNuxtRouteMiddleware(async () => {
-    const user = await getCurrentUser()
+  const queryCache = useQueryCache()
+  const entry = queryCache.ensure(getCurrentUser)
 
-    if (user) {
-        return navigateTo({ name: 'dashboard' })
-    }
+  const { data: user } = await queryCache.refresh(entry)
+
+  if (user) {
+    return navigateTo({ name: 'dashboard' })
+  }
 })

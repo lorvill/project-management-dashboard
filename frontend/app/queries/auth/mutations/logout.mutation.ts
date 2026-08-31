@@ -1,5 +1,5 @@
 import {useQueryCache} from "@pinia/colada";
-import {logoutUser} from "~/queries/auth/auth.api";
+import {logoutUser} from "~/api/auth.api";
 
 const queryCache = useQueryCache()
 

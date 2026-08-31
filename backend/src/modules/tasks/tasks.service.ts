@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Task } from '../../../generated/prisma/client';
@@ -49,19 +48,11 @@ export class TasksService {
   }
 
   async delete(id: string, userId: string) {
-    const task = await this.prismaService.task.findFirst({
+    return this.prismaService.task.delete({
       where: {
         id,
         OR: [{ createdById: userId }, { assigneeId: userId }],
       },
-    });
-
-    if (!task) {
-      throw new NotFoundException('Task not found');
-    }
-
-    return this.prismaService.task.delete({
-      where: { id },
     });
   }
 
@@ -69,39 +60,48 @@ export class TasksService {
     userId: string,
     groupBy: TaskGroupBy,
   ): Promise<TasksGroupedByStatus> {
-    const tasks = await this.prismaService.task.findMany({
-      where: {
-        OR: [{ createdById: userId }, { assigneeId: userId }],
-      },
-      orderBy: {
-        createdAt: 'asc',
-      },
-    });
-
     if (groupBy !== 'status') {
       throw new BadRequestException(`Unsupported groupBy`);
     }
 
+    const rows = await this.prismaService.$queryRaw<
+      { status: TaskStatus; count: number; tasks: Task[] }[]
+    >`
+      SELECT
+        t.status,
+        COUNT(*)::int AS count,
+        jsonb_agg(
+          jsonb_build_object(
+            'id', t.id,
+            'title', t.title,
+            'description', t.description,
+            'status', t.status,
+            'dueDate', t.due_date,
+            'createdById', t.created_by_id,
+            'assigneeId', t.assignee_id,
+            'workspaceId', t.workspace_id,
+            'createdAt', t.created_at,
+            'updatedAt', t.updated_at
+          )
+        ORDER BY t.created_at ASC
+      ) AS tasks
+      FROM tasks AS t
+      WHERE t.created_by_id = ${userId}
+         OR t.assignee_id = ${userId}
+      GROUP BY t.status
+    `;
+
     const groups: TasksGroupedByStatus = {
-      [TaskStatus.NOT_STARTED]: {
-        count: 0,
-        tasks: [],
-      },
-      [TaskStatus.IN_PROGRESS]: {
-        count: 0,
-        tasks: [],
-      },
-      [TaskStatus.DONE]: {
-        count: 0,
-        tasks: [],
-      },
+      [TaskStatus.NOT_STARTED]: { count: 0, tasks: [] },
+      [TaskStatus.IN_PROGRESS]: { count: 0, tasks: [] },
+      [TaskStatus.DONE]: { count: 0, tasks: [] },
     };
 
-    for (const task of tasks) {
-      const group = groups[task.status];
-
-      group.tasks.push(task);
-      group.count += 1;
+    for (const row of rows) {
+      groups[row.status] = {
+        count: row.count,
+        tasks: row.tasks,
+      };
     }
 
     return groups;

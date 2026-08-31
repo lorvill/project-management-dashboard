@@ -1,4 +1,4 @@
-import {deleteTask} from "~/queries/tasks/tasks.api";
+import {deleteTask} from "~/api/tasks.api";
 import {TASKS_QUERY_KEYS} from "~/queries/tasks/tasks.keys";
 
 export const useDeleteTaskMutation = () => {

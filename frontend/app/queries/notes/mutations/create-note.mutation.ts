@@ -1,5 +1,5 @@
 import type { Note } from '~~/types/note.types'
-import { createNote } from '~/queries/notes/notes.api'
+import { createNote } from '~/api/notes.api'
 import { NOTES_QUERY_KEYS } from '~/queries/notes/notes.keys'
 import type {CreateNoteDto} from "~/queries/notes/notes.dto";
 import { useQueryCache } from '@pinia/colada'

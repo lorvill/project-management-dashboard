@@ -1,5 +1,5 @@
 import {TASKS_QUERY_KEYS} from "~/queries/tasks/tasks.keys";
-import {getGroupedTasks} from "~/queries/tasks/tasks.api";
+import {getGroupedTasks} from "~/api/tasks.api";
 
 export const useGroupedTasksQuery = () => {
   return useQuery({

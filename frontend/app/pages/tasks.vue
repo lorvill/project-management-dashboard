@@ -1,31 +1,26 @@
 <script setup lang="ts">
-import { provide, ref } from 'vue'
 import TasksToolbar from '~/components/tasks/TasksToolbar.vue'
 import { Grip, Loader } from "lucide-vue-next";
-import {tasksLayoutKey} from "~/utils/tasks/tasks.utils";
 import {useRouteQuery} from "@vueuse/router";
 import {TaskSort, TaskStatus} from "~/queries/tasks/tasks.dto";
+import {useTaskCreation} from "~/composables/tasks/useTaskCreation";
 
-const isCreatingTask = ref(false)
-
-const showNewTaskInput = () => {
-  isCreatingTask.value = true
-}
-
-const closeNewTaskInput = () => {
-  isCreatingTask.value = false
-}
+const { showNewTaskInput, closeNewTaskInput } = useTaskCreation()
 
 const statusFilter = useRouteQuery<TaskStatus>('status') //ref
 const sortOrder = useRouteQuery<TaskSort>('sort', TaskSort.NEWEST)
+
 const route = useRoute()
 const isChecklist = computed(() => route.name === 'tasks-checklist')
 
-provide(tasksLayoutKey, {
-  isCreatingTask,
-  showNewTaskInput,
-  closeNewTaskInput,
-})</script>
+const statusLabels: Record<TaskStatus, string> = {
+  [TaskStatus.DONE]: 'Done',
+  [TaskStatus.IN_PROGRESS]: 'In progress',
+  [TaskStatus.NOT_STARTED]: 'Not started',
+}
+
+onBeforeUnmount(closeNewTaskInput)
+</script>
 
 <template>
   <section
@@ -60,7 +55,7 @@ provide(tasksLayoutKey, {
         >
           <Loader class="size-4"/>
           <span>status:</span>
-          <span>{{ statusFilter.toLowerCase().replaceAll('_', ' ') }}</span>
+          <span>{{ statusLabels[statusFilter] }}</span>
         </div>
       </div>
 

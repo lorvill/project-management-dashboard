@@ -12,6 +12,7 @@ import { getLocalTimeZone, today } from '@internationalized/date'
 import type { DateValue } from '@internationalized/date'
 import { Calendar } from '@/components/ui/calendar'
 import {useTasksQuery} from "~/queries/tasks/all-tasks.query";
+import {TaskStatus} from "~/queries/tasks/tasks.dto";
 
 const selectedDate = ref<DateValue>(today(getLocalTimeZone()))
 const stats = [
@@ -45,11 +46,10 @@ const tasks = computed(() => {
   return getTasks.value?.slice(0,3) ?? []
 })
 
-const formatStatus = (status: string) => {
-  return status
-      .toLowerCase()
-      .replaceAll('_', ' ')
-      .replace(/^\w/, letter => letter.toUpperCase())
+const statusLabels: Record<TaskStatus, string> = {
+  [TaskStatus.DONE]: 'Done',
+  [TaskStatus.IN_PROGRESS]: 'In progress',
+  [TaskStatus.NOT_STARTED]: 'Not started',
 }
 
 const getNotes = useNoteQuery({limit: ref(2)})
@@ -185,33 +185,32 @@ const date = useDateFormat(useNow(), 'D MMMM', { locales: 'en-US' })
            lg:items-center lg:gap-4"
             >
               <p
-                  class="mb-3 text-[0.9rem] font-medium text-[#1e1e1e]
-             lg:mb-0 lg:font-normal"
+                  class="mb-3 text-[0.9rem] font-medium text-[#1e1e1e] lg:mb-0 lg:font-normal"
               >
                 {{ task.title }}
               </p>
 
               <div class="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 lg:contents">
                 <div class="flex min-w-0 flex-col gap-0.5 lg:contents">
-        <span
-            class="text-[0.7rem] font-semibold uppercase
-                 tracking-[0.04em] text-slate-400 lg:hidden"
-        >
-          Status
-        </span>
+                  <span
+                      class="text-[0.7rem] font-semibold uppercase
+                           tracking-[0.04em] text-slate-400 lg:hidden"
+                  >
+                    Status
+                  </span>
 
                   <span class="text-[0.85rem] text-slate-500 lg:text-[0.875rem]">
-          {{ formatStatus(task.status) }}
-        </span>
+                    {{ statusLabels[task.status] }}
+                  </span>
                 </div>
 
                 <div class="flex min-w-0 flex-col gap-0.5 lg:contents">
-        <span
-            class="text-[0.7rem] font-semibold uppercase
-                 tracking-[0.04em] text-slate-400 lg:hidden"
-        >
-          Due date
-        </span>
+                  <span
+                  class="text-[0.7rem] font-semibold uppercase
+                       tracking-[0.04em] text-slate-400 lg:hidden"
+                  >
+                    Due date
+                  </span>
 
                   <span class="text-[0.85rem] text-slate-500 lg:text-[0.875rem]">
           {{

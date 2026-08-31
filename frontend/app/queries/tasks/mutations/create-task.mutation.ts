@@ -1,5 +1,5 @@
 import {useQueryCache} from "@pinia/colada";
-import {createTask} from "~/queries/tasks/tasks.api";
+import {createTask} from "~/api/tasks.api";
 import {type CreateTaskDto, type Task, TaskStatus} from "~/queries/tasks/tasks.dto";
 import {TASKS_QUERY_KEYS} from "~/queries/tasks/tasks.keys";
 import {AUTH_QUERY_KEYS} from "~/queries/auth/auth.keys";

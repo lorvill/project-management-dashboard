@@ -1,5 +1,5 @@
-import {loginUser} from "~/queries/auth/auth.api";
 import {getAuthRedirect, setUser} from "~/utils/auth/auth.utils";
+import {loginUser} from "~/api/auth.api";
 
 export const useLoginMutation = defineMutation({
     mutation: loginUser,

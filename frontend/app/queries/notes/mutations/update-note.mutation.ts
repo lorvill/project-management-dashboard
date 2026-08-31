@@ -1,4 +1,4 @@
-import { updateNote } from '~/queries/notes/notes.api'
+import { updateNote } from '~/api/notes.api'
 import { NOTES_QUERY_KEYS } from '~/queries/notes/notes.keys'
 import type {UpdateNoteDto} from "~/queries/notes/notes.dto";
 import type {Note} from "~~/types/note.types";

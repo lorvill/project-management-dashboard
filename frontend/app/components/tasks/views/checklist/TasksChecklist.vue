@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { inject, nextTick } from 'vue'
+import { nextTick } from 'vue'
 import { Check, CircleCheck, LoaderCircle, StickyNote, Plus } from 'lucide-vue-next'
 import { useRouteQuery } from '@vueuse/router'
-import { tasksLayoutKey } from '~/utils/tasks/tasks.utils'
 import { useTasksQuery } from '~/queries/tasks/all-tasks.query'
 import { useCreateTaskMutation } from '~/queries/tasks/mutations/create-task.mutation'
 import { useUpdateTaskMutation } from '~/queries/tasks/mutations/update-task.mutation'
 import {TaskSort, TaskStatus, type Task, type UpdateTaskDto} from '~/queries/tasks/tasks.dto'
 import TaskActionsContextMenu from "~/components/tasks/TaskActionsContextMenu.vue";
-import {deleteTask} from "~/queries/tasks/tasks.api";
 import {useDeleteTaskMutation} from "~/queries/tasks/mutations/delete-task.mutation";
+import {useTaskCreation} from "~/composables/tasks/useTaskCreation";
 
-const tasksLayout = inject(tasksLayoutKey)
+const {
+  isCreatingTask,
+  closeNewTaskInput,
+  showNewTaskInput
+} = useTaskCreation()
 
 const emit = defineEmits<{
   (e: 'duplicate', task: Task): void
@@ -29,7 +32,7 @@ const updateTask = useUpdateTaskMutation()
 const newTaskTitle = ref('')
 const newTaskInput = useTemplateRef<HTMLInputElement>('new-task-input')
 
-watch(tasksLayout.isCreatingTask, async (isCreating) => {
+watch(isCreatingTask, async (isCreating) => {
   if (!isCreating) return
   await nextTick()
   newTaskInput.value?.focus()
@@ -41,12 +44,12 @@ function submitTask() {
 
   createTask.mutate({ title, description: '', status: TaskStatus.NOT_STARTED })
   newTaskTitle.value = ''
-  tasksLayout?.closeNewTaskInput()
+  closeNewTaskInput()
 }
 
 function cancelCreation() {
   newTaskTitle.value = ''
-  tasksLayout?.closeNewTaskInput()
+  closeNewTaskInput()
 }
 
 function toggleTask(task: Task) {
@@ -117,7 +120,7 @@ function removeTask(id: string) {
       </TaskActionsContextMenu>
 
       <form
-        v-if="tasksLayout?.isCreatingTask.value"
+        v-if="isCreatingTask"
         class="flex min-h-11 items-center gap-4 px-1"
         @submit.prevent="submitTask"
       >
@@ -137,7 +140,7 @@ function removeTask(id: string) {
         v-else
         type="button"
         class="flex min-h-11 items-center gap-3 px-1 text-base text-zinc-400 transition-colors hover:text-zinc-700"
-        @click="tasksLayout?.showNewTaskInput"
+        @click="showNewTaskInput"
       >
         <Plus class="size-5" />
         New task

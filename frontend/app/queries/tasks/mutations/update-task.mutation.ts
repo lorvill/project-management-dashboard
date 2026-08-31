@@ -1,4 +1,4 @@
-import {updateTask} from "~/queries/tasks/tasks.api";
+import {updateTask} from "~/api/tasks.api";
 import type {Task, UpdateTaskDto} from "~/queries/tasks/tasks.dto";
 import {TASKS_QUERY_KEYS} from "~/queries/tasks/tasks.keys";
 
