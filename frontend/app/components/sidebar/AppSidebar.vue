@@ -48,7 +48,7 @@ const menuSections: MenuSection[] = [
       { title: 'Search', icon: SearchIcon },
       { title: 'Dashboard', icon: LayoutGrid, to: { name: 'dashboard' } },
       { title: 'Notes', icon: NotebookIcon, to: { name: 'notes' } },
-      { title: 'Task List', icon: ListIcon },
+      { title: 'Task List', icon: ListIcon, to: { name: 'tasks' } },
     ]
   },
   {

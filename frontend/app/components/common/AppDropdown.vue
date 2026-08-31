@@ -7,12 +7,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {LogOut, Settings, User} from "lucide-vue-next";
-import {useLogoutMutation} from "~/api/auth/mutations/logout.mutation";
-import {useUserQuery} from "~/api/user/user.queries";
-import {randomColor} from "~/utils/common/getRandomColor";
+import {useLogoutMutation} from "~/queries/auth/mutations/logout.mutation";
+import {useUserQuery} from "~/queries/user/user.queries";
+import {useRandomColor} from '~/composables/common/useRandomColor'
 
-const userColor = randomColor();
-const logoutMutation = useLogoutMutation();
+const userColor = useRandomColor()
+const logoutMutation = useLogoutMutation()
 const {currentUserQuery} = useUserQuery()
 
 const user = computed(() =>
@@ -58,9 +58,10 @@ const firstLetter = computed(() => user.value?.displayName.charAt(0))
 
       <DropdownMenuItem
           class="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 outline-none transition-all duration-200 rounded-lg cursor-pointer hover:bg-red-50 hover:text-red-600 group"
+          @select="logoutMutation.mutate()"
       >
         <component :is="LogOut" class="w-4 h-4 text-slate-400 group-hover:text-red-500 transition-colors" />
-        <span @click="logoutMutation.mutate()" class="font-medium">Log Out</span>
+        <span class="font-medium">Log Out</span>
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>

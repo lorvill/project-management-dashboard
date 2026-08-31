@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { EditorContent } from '@tiptap/vue-3'
 import NotesToolbarEditor from './detail/NotesToolbarEditor.vue'
-import { useCurrentNotesQuery } from '~/api/notes/queries/current-note.query'
-import {useUpdateNoteMutation} from "~/api/notes/mutations/update-note.mutation";
 import {useDebounceFn, useEventListener} from "@vueuse/core";
+import {useNoteEditor} from "~/composables/useNoteEditor";
+import {useCurrentNotesQuery} from "~/queries/notes/queries/current-note.query";
+import {useUpdateNoteMutation} from "~/queries/notes/mutations/update-note.mutation";
 
 const route = useRoute()
 const noteId = computed(() => String(route.params.id ?? ''))

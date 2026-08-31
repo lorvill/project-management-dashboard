@@ -10,9 +10,9 @@ import {
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import {redirectToGoogleAuth} from "~/utils/auth/auth.utils";
-import {useLoginMutation} from "~/api/auth/mutations/login.mutation";
+import {useLoginMutation} from "../../queries/auth/mutations/login.mutation";
 import { useForm } from 'vee-validate'
-import { loginSchema } from "~/api/auth/auth.zod-schema";
+import { loginSchema } from "../../queries/auth/auth.zod-schema";
 import {toTypedSchema} from "@vee-validate/zod";
 
 const showPassword = ref(false)

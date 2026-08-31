@@ -1,0 +1,48 @@
+import {apiFetch} from "~/queries/api";
+import {
+  type CreateTaskDto,
+  type Task,
+  type TasksGroupedByStatus, TaskSort,
+  TaskStatus,
+  type UpdateTaskDto
+} from "~/queries/tasks/tasks.dto";
+
+export const getAllTasks = (params?: {
+  status?: TaskStatus,
+  sort?: TaskSort,
+}) : Promise<Task[]>=> {
+  return apiFetch('/tasks', {
+    method: 'GET',
+    query: params,
+  })
+};
+
+export const getGroupedTasks =
+  (): Promise<TasksGroupedByStatus> => {
+    return apiFetch('/tasks/view', {
+      method: 'GET',
+      query: {
+        groupBy: 'status',
+      },
+    })
+  }
+
+export const createTask = (dto: CreateTaskDto): Promise<Task> => {
+  return apiFetch(`/tasks`, {
+    method: 'POST',
+    body: dto,
+  })
+};
+
+export const updateTask = ({id, ...dto}: { id: string } & UpdateTaskDto) => {
+  return apiFetch(`/tasks/${id}`, {
+    method: 'PATCH',
+    body: dto,
+  })
+}
+
+export const deleteTask = (id: string): Promise<void> => {
+  return apiFetch(`/tasks/${id}`, {
+    method: 'DELETE'
+  })
+}
